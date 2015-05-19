@@ -15,11 +15,16 @@
     <script src="client.js"></script>
   </head>
   <body>
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        Some error
+    </div>
     <div id="info">
       <div id="room-actions">
         <input type="text" name="roomName" id="roomName" />
         <button id="create-room">Create Room</button>
         <button id="join-room">Join Room</button>
+        <p>Room name: </p>
       </div>
     </div>
     <ul id="messages"></ul>
