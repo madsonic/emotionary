@@ -39,8 +39,3 @@ function createRoom(roomName) {
 function joinRoom(roomName) {
     socket.emit('join-room', roomName);
 }
-
-// ROOM ACTIONS
-// $(document).ready(function() {
-//     $('button#create-room').colorbox({href: });
-// });
