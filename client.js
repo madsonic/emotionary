@@ -1,3 +1,7 @@
+// INITIALIZE SOCKET
+
+var socket = io();
+
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 
 $('#join-room').click(function() {
@@ -5,17 +9,28 @@ $('#join-room').click(function() {
     joinRoom(roomName);
 });
 
-$('#crate-room').click(function() {
-    var roomName = $('#roomName').val();
-    createRoom(roomName);
-}
+$('#create-room').click(function() {
+            var roomName = $('#roomName').val();
+            createRoom(roomName);
+});
 
 
 // SOCKET EVENT LISTENERS
 
+socket.on('echo', function(data) {
+    console.log("echo message: " + data);
+});
 
+socket.on('error', function(err) {
+    alert(err);
+});
+
+socket.on('success', function(succ) {
+    alert(succ);
+});
 
 // SOCKET EVENT EMITTERS
+
 function createRoom(roomName) {
     socket.emit('create-room', roomName);
 }
