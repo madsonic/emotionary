@@ -10,8 +10,8 @@ $('#join-room').click(function() {
 });
 
 $('#create-room').click(function() {
-            var roomName = $('#roomName').val();
-            createRoom(roomName);
+    var roomName = $('#roomName').val();
+    createRoom(roomName);
 });
 
 
@@ -21,7 +21,7 @@ socket.on('echo', function(data) {
     console.log("echo message: " + data);
 });
 
-socket.on('error', function(err) {
+socket.on('err', function(err) {
     alert(err);
 });
 
