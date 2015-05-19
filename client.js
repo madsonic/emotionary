@@ -3,15 +3,16 @@
 var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
+$(document).ready(function() {
+    $('#join-room').click(function() {
+        var roomName = $('#roomName').val();
+        joinRoom(roomName);
+    });
 
-$('#join-room').click(function() {
-    var roomName = $('#roomName').val();
-    joinRoom(roomName);
-});
-
-$('#create-room').click(function() {
-    var roomName = $('#roomName').val();
-    createRoom(roomName);
+    $('#create-room').click(function() {
+        var roomName = $('#roomName').val();
+        createRoom(roomName);
+    });
 });
 
 
