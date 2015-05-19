@@ -3,15 +3,16 @@
 var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
+$(document).ready(function() {
+    $('#join-room').click(function() {
+        var roomName = $('#roomName').val();
+        joinRoom(roomName);
+    });
 
-$('#join-room').click(function() {
-    var roomName = $('#roomName').val();
-    joinRoom(roomName);
-});
-
-$('#create-room').click(function() {
-            var roomName = $('#roomName').val();
-            createRoom(roomName);
+    $('#create-room').click(function() {
+        var roomName = $('#roomName').val();
+        createRoom(roomName);
+    });
 });
 
 
@@ -38,3 +39,8 @@ function createRoom(roomName) {
 function joinRoom(roomName) {
     socket.emit('join-room', roomName);
 }
+
+// ROOM ACTIONS
+// $(document).ready(function() {
+//     $('button#create-room').colorbox({href: });
+// });
