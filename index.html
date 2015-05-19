@@ -9,11 +9,15 @@
   </head>
   <body>
     <div id="info">
-      <ul>
-        <li id="roomname">Room name</li>
-      </ul>
+      <div id="room-actions">
+        <button id="create-room">Create Room</button>
+        <button id="join-room">Join Room</button>
+      </div>
+      <p id="roomname">Room name</p>
     </div>
     <ul id="messages"></ul>
-    <input id="m" autocomplete="off" autofocus /><button>Send</button>
+    <div id="text-box">
+      <input id="m" autocomplete="off" autofocus /><button id="send-message">Send</button>
+    </div>
   </body>
 </html>
