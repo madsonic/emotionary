@@ -3,18 +3,23 @@
 var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
-$(document).ready(function() {
-    $('#join-room').click(function() {
-        var roomName = $('#roomName').val();
-        joinRoom(roomName);
-    });
+$(document).ready(function() { 
+    $('.popup').popup({
+        afterOpen: function() {
+            $('#join-room').click(function() {
+                console.log("joining room")
+                var roomName = $('#roomName').val();
+                joinRoom(roomName);
+            });
 
-    $('#create-room').click(function() {
-        var roomName = $('#roomName').val();
-        createRoom(roomName);
+            $('#create-room').click(function() {
+                console.log("creating room")
+                var roomName = $('#roomName').val();
+                createRoom(roomName);
+            });
+        }
     });
 });
-
 
 // SOCKET EVENT LISTENERS
 
@@ -27,7 +32,9 @@ socket.on('err', function(err) {
 });
 
 socket.on('success', function(succ) {
+    $('.popup_close').click();
     alert(succ);
+
 });
 
 // SOCKET EVENT EMITTERS
@@ -39,9 +46,3 @@ function createRoom(roomName) {
 function joinRoom(roomName) {
     socket.emit('join-room', roomName);
 }
-
-// POPUP CALLS
-
-$(function() { 
-    $('.popup').popup();
-});

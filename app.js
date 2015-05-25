@@ -38,6 +38,15 @@ io.on('connection', function(socket) {
         }
 
    });
+        activeRooms[roomName] = {
+            "owner": socket.id,
+            "canJoin": true
+        };
+        socket.join(roomName);
+
+        socket.emit('success', '\"' + roomName + '\" successfully created.');
+
+    });
 
     socket.on('join-room', function(roomName) {
         console.log('req to join room ' + roomName);
