@@ -39,3 +39,9 @@ function createRoom(roomName) {
 function joinRoom(roomName) {
     socket.emit('join-room', roomName);
 }
+
+// POPUP CALLS
+
+$(function() { 
+    $('.popup').popup();
+});

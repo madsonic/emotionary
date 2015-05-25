@@ -63,3 +63,8 @@ div#text-box button {
     text-align: center;
     opacity: 0.95;
 }
+
+a.popup {
+    text-decoration: none;
+    color: #000;
+}
