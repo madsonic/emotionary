@@ -30,7 +30,6 @@ io.on('connection', function(socket) {
             "owner": socket.id,
             "canJoin": true
         };
-
         socket.join(roomName);
 
         socket.emit('success', '\"' + roomName + '\" successfully created.');

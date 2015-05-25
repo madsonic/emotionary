@@ -32,7 +32,7 @@ div#text-box input {
     width: 90%;
     margin-right: .5%;
 }
-div#room-actions button,
+div.room button,
 div#text-box button { 
     width: 9%;
     background: #fff;
