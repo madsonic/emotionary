@@ -5,6 +5,8 @@ var socket = io();
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 $(document).ready(function() { 
     $('.popup').popup({
+        width: 500,
+        heigth: 150,
         afterOpen: function() {
             $('#join-room').click(function() {
                 console.log("joining room")
@@ -18,6 +20,7 @@ $(document).ready(function() {
                 createRoom(roomName);
             });
         }
+
     });
 });
 
@@ -27,13 +30,15 @@ socket.on('echo', function(data) {
     console.log("echo message: " + data);
 });
 
-socket.on('error', function(err) {
-    alert(err);
+socket.on('room-error', function(errMsg) {
+    // reveal alert message
+    $('.alert-danger').append(errMsg);
+    $('.alert-danger').show();
 });
 
 socket.on('success', function(succ) {
     $('.popup_close').click();
-    alert(succ);
+    console.log(succ);
 
 });
 
