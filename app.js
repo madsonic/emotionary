@@ -20,6 +20,14 @@ io.on('connection', function(socket) {
         socket.emit('echo', data);
     });
 
+    // activeRooms - keeps track of the rooms active currently
+    var activeRooms = {
+        'room1': { 
+            "owner": 123,
+            "canJoin": true
+        }
+    };
+
     // create new room for the user. (if the room is not taken)
     socket.on('create-room', function(roomName) {
         console.log('req to create room ' + roomName);
@@ -38,7 +46,7 @@ io.on('connection', function(socket) {
         }
 
    });
-        activeRooms[roomName] = {
+        activeRooms.roomName = {
             "owner": socket.id,
             "canJoin": true
         };
@@ -49,12 +57,12 @@ io.on('connection', function(socket) {
     });
 
     socket.on('join-room', function(roomName) {
-        console.log('req to join room ' + roomName);
-
-        if (activeRooms.hasOwnProperty(roomName) && activeRooms[roomName].canJoin === true) {
+        console.log(roomName);
+        var room = activeRooms[roomName];
+        if (room !== undefined && room.canJoin === true) {
             socket.join(roomName);
         } else {
-            socket.emit('error', 'Unable to join room. Either room doesn\'t exist or game has already started');
+            socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
         }
     });
 });
