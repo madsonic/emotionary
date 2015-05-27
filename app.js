@@ -28,15 +28,16 @@ io.on('connection', function(socket) {
     // create new room for the user. (if the room is not taken)
     socket.on('create-room', function(roomName) {
         if (activeRooms.hasOwnProperty(roomName)) {
-            socket.emit('error', '\"' + roomName + '\" already exists. Please choose another name');
-        }
-        activeRooms.roomName = {
-            "owner": socket.id,
-            "canJoin": true
-        };
-        socket.join(roomName);
+            socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
+        } else {
+            activeRooms.roomName = {
+                "owner": socket.id,
+                "canJoin": true
+            };
 
-        socket.emit('success', '\"' + roomName + '\" successfully created.');
+            socket.join(roomName);
+            socket.emit('success', '\"' + roomName + '\" successfully created.');
+        }
 
     });
 

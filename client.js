@@ -9,13 +9,11 @@ $(document).ready(function() {
         heigth: 150,
         afterOpen: function() {
             $('#join-room').click(function() {
-                console.log("joining room")
                 var roomName = $('#roomName').val();
                 joinRoom(roomName);
             });
 
             $('#create-room').click(function() {
-                console.log("creating room")
                 var roomName = $('#roomName').val();
                 createRoom(roomName);
             });
