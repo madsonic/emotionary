@@ -33,26 +33,16 @@ io.on('connection', function(socket) {
         console.log('req to create room ' + roomName);
         console.log(activeRooms);
         if (activeRooms.hasOwnProperty(roomName)) {
-            socket.emit('err', 'Requested room already exists. Please choose another one.');
-        } else { 
-            activeRooms[roomName] = {
+            socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
+        } else {
+            activeRooms.roomName = {
                 "owner": socket.id,
                 "canJoin": true
             };
-        
+
             socket.join(roomName);
-    
-            socket.emit('success', '\"' + roomName + '\" successfully created.')
+            socket.emit('success', '\"' + roomName + '\" successfully created.');
         }
-
-   });
-        activeRooms.roomName = {
-            "owner": socket.id,
-            "canJoin": true
-        };
-        socket.join(roomName);
-
-        socket.emit('success', '\"' + roomName + '\" successfully created.');
 
     });
 

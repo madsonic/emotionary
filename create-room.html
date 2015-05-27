@@ -1,5 +1,18 @@
 <div class="room-form">
+    <!-- error message -->
+    <div class="alert alert-danger" role="alert" hidden>
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+    </div>
+
     <h3>Create Room</h3>
-    <input type="text" name="roomName" id="roomName" placeholder="Room Name" autofocus/>
-    <button id="create-room">Create</button>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="input-group">
+          <input type="text" class="form-control" name="roomName" id="roomName" placeholder="Room Name">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" id="create-room">Create!</button>
+          </span>
+        </div>
+      </div>
+    </div>
 </div>
