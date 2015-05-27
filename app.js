@@ -3,16 +3,19 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.use(express.static(__dirname));
+// CONFIGURATION
+app.use(express.static(__dirname + '/public'));
+app.use('/vendor', express.static(__dirname + '/vendor'));
 
 app.get('/', function(req, res) {
-    res.sendfile('index.html');
+    res.sendFile('/index.html');
 });
 
 // rooms_active - keeps track of the rooms active currently
 var activeRooms = {};
 
 io.on('connection', function(socket) {
+    console.log(__dirname);
     console.log('a user connected');
     console.log('socketid: ' + socket.id);
     
