@@ -2,23 +2,23 @@
 <html>
   <head>
     <title>chat tutorial</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <link rel="stylesheet" type="text/css" href="popup.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/vendor/css/popup.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
-    <script src="client.js"></script>
+    <script src="js/client.js"></script>
   </head>
   <body>
     <div id="info">
       <div class="room">
-        <a href="create-room.html" class="popup">    
+        <a href="views/create-room.html" class="popup">    
             <button>Create Room</button>
         </a>
-        <a href="join-room.html" class="popup">
+        <a href="views/join-room.html" class="popup">
             <button>Join Room</button>
         </a>
         <p>Room name: </p>
@@ -28,6 +28,6 @@
     <div id="text-box">
       <input id="m" autocomplete="off" autofocus /><button id="send-message">Send</button>
     </div>
-    <script src="jquery.popup.min.js"></script>
+    <script src="/vendor/js/jquery.popup.min.js"></script>
   </body>
 </html>
