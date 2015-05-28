@@ -8,7 +8,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/vendor', express.static(__dirname + '/vendor'));
 
 app.get('/', function(req, res) {
-    res.sendFile('/index.html');
+    res.sendFile('index.html');
 });
 
 // rooms_active - keeps track of the rooms active currently
