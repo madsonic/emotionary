@@ -20,11 +20,11 @@ Apollo 11
 [Trello board][]
 
 1. [x] Message sending
-	* As a player I want to send my answer to the 'game master' for verification
+    * As a player I want to send my answer to the 'game master' for verification
     * As a active/non-active player, everyone should be able to see my answer so that we share funny answers
 2. Room function (create/join)
-	* As a player I want to be able to join room and quick start a game
-	* As a player I want to able to create room so that I can play in a private environment
+    * As a player I want to be able to join room and quick start a game
+    * As a player I want to able to create room so that I can play in a private environment
 3. set nickname
     * As a player I want to be able to set a unique name to be identifiable
 4. game engine (logic)
