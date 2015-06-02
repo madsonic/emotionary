@@ -11,13 +11,11 @@ A web based quiz game. Play timed quiz with your friends or the world! Each roun
 Apollo 11
 
 ### Ignition
-[Video][]
+[Video][]<br>
 [Slides][]
   
 ### Planned Features
 *[x] indicates completed feature*
-
-[Trello board][]
 
 1. [x] Message sending
     * As a player I want to send my answer to the 'game master' for verification
@@ -76,9 +74,8 @@ Technology:
 [Log][]
 
 <!-- links -->
-[ignition]: http://youtu.be/HEGBts_DTzo
+[video]: http://youtu.be/HEGBts_DTzo
 [slides]: https://docs.google.com/presentation/d/1aR7e_4yMLNAcQ9QlRmh7JdMM8Tlh1obsozhcB6fMlt8/edit?usp=sharing 
-[trello board]: 
 [Socket.io]: http://socket.io/
 [node.js]: https://nodejs.org/api/all.html
 [git]: https://progit.org/
