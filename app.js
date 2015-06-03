@@ -3,10 +3,12 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.use(express.static(__dirname));
+// CONFIGURATION
+app.use(express.static(__dirname + '/public'));
+app.use('/vendor', express.static(__dirname + '/vendor'));
 
 app.get('/', function(req, res) {
-    res.sendfile('index.html');
+    res.sendFile('index.html');
 });
 
 // rooms_active - keeps track of the rooms active currently
@@ -20,33 +22,53 @@ io.on('connection', function(socket) {
         socket.emit('echo', data);
     });
 
-    // create new room for the user. (if the room is not taken)
+    // activeRooms - keeps track of the rooms active currently
+    var activeRooms = {
+        'room1': { 
+            "owner": 123,
+            "canJoin": true
+        }
+    };
+
+    // EVENT HANDLERS
+
+    // create new room for the user.
     socket.on('create-room', function(roomName) {
-        console.log('req to create room ' + roomName);
-        console.log(activeRooms);
         if (activeRooms.hasOwnProperty(roomName)) {
-            socket.emit('err', 'Requested room already exists. Please choose another one.');
-        } else { 
-            activeRooms[roomName] = {
+            socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
+        } else {
+            activeRooms.roomName = {
                 "owner": socket.id,
                 "canJoin": true
             };
-        
+
             socket.join(roomName);
-    
-            socket.emit('success', '\"' + roomName + '\" successfully created.')
+            socket.emit('success', 
+                        '\"' + roomName + '\" successfully created.', 
+                        roomName);
         }
 
-   });
+    });
 
+    // handle room joining
     socket.on('join-room', function(roomName) {
-        console.log('req to join room ' + roomName);
-
-        if (activeRooms.hasOwnProperty(roomName) && activeRooms[roomName].canJoin === true) {
+        console.log(roomName);
+        var room = activeRooms[roomName];
+        if (room !== undefined && room.canJoin === true) {
             socket.join(roomName);
+            socket.emit('success', 'Welcome to ' + roomName, roomName);
         } else {
-            socket.emit('error', 'Unable to join room. Either room doesn\'t exist or game has already started');
+            socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
         }
+    });
+
+    // handle message transfer
+    socket.on('message', function(msg, id) {
+        var data = {
+            'msg': msg, 
+            'id': id
+        }
+        socket.broadcast.emit('message', data);
     });
 });
 
