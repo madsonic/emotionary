@@ -37,10 +37,6 @@ socket.on('message', function(data) {
     receiveMsg(data.msg, data.id);
 });
 
-socket.on('echo', function(data) {
-    console.log("echo message: " + data);
-});
-
 socket.on('room-error', function(errMsg) {
     // reveal alert message
     $('.alert-danger').append(errMsg);
@@ -50,7 +46,7 @@ socket.on('room-error', function(errMsg) {
 socket.on('success', function(msg, data) {
     $('.popup_close').click();
     $('#messages').append('<li class="admin">' + msg);
-    $('.room p').text('Room name: ' + data);
+    $('.room p').text('Room name: ' + data.name);
 });
 
 // SOCKET EVENT EMITTERS
