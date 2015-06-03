@@ -13,21 +13,20 @@
     <script src="js/client.js"></script>
   </head>
   <body>
-    <div id="info">
-      <div class="room">
-        <a href="views/create-room.html" class="popup">    
-            <button>Create Room</button>
-        </a>
-        <a href="views/join-room.html" class="popup">
-            <button>Join Room</button>
-        </a>
-        <p>Room name: </p>
-      </div>
+    <div class="room">
+      <a href="views/create-room.html" class="popup">    
+          <button>Create Room</button>
+      </a>
+      <a href="views/join-room.html" class="popup">
+          <button>Join Room</button>
+      </a>
+      <p>Room name: </p>
     </div>
     <ul id="messages"></ul>
     <div id="text-box">
       <input id="message" autocomplete="off" autofocus /><button id="send-message">Send</button>
     </div>
+    <script src="js/room.js"></script>
     <script src="/vendor/js/jquery.popup.min.js"></script>
   </body>
 </html>
