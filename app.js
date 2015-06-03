@@ -30,10 +30,10 @@ io.on('connection', function(socket) {
         }
     };
 
-    // create new room for the user. (if the room is not taken)
+    // EVENT HANDLERS
+
+    // create new room for the user.
     socket.on('create-room', function(roomName) {
-        console.log('req to create room ' + roomName);
-        console.log(activeRooms);
         if (activeRooms.hasOwnProperty(roomName)) {
             socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
         } else {
@@ -43,19 +43,32 @@ io.on('connection', function(socket) {
             };
 
             socket.join(roomName);
-            socket.emit('success', '\"' + roomName + '\" successfully created.');
+            socket.emit('success', 
+                        '\"' + roomName + '\" successfully created.', 
+                        roomName);
         }
 
     });
 
+    // handle room joining
     socket.on('join-room', function(roomName) {
         console.log(roomName);
         var room = activeRooms[roomName];
         if (room !== undefined && room.canJoin === true) {
             socket.join(roomName);
+            socket.emit('success', 'Welcome to ' + roomName, roomName);
         } else {
             socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
         }
+    });
+
+    // handle message transfer
+    socket.on('message', function(msg, id) {
+        var data = {
+            'msg': msg, 
+            'id': id
+        }
+        socket.broadcast.emit('message', data);
     });
 });
 

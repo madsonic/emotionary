@@ -8,12 +8,12 @@ body {
     font: 13px Helvetica, Arial; 
 }
 
-div#info {
+div.room {
     padding-bottom: 5px;
     text-align: center;
     background-color: #0066FF;
 }
-div#info p {
+div.room p {
     margin: 10px;
     color: #fff;
 }
@@ -33,7 +33,7 @@ div#text-box input {
     margin-right: .5%;
 }
 div.room button,
-div#text-box button { 
+button#send-message { 
     width: 9%;
     background: #fff;
     border: none;
