@@ -2,7 +2,8 @@ var express = require('express');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var Room = require('./public/js/room.js');
+var Room = require('./room.js');
+var Player = require('./player.js');
 
 // CONFIGURATION
 app.use(express.static(__dirname + '/public'));
@@ -47,20 +48,16 @@ var players = {
     }
 };
 
-var count = 1;
+module.exports.players = players;
 
 io.on('connection', function(socket) {
     console.log('a user connected');
-    console.log('socketid: ' + socket.id);
+    console.log('socket id: ' + socket.id);
 
     // Initialise new player
-    players[socket.id] = {
-        name: 'player ' + count,
-        role: 'player',
-        room: socket.id
-    }
-    console.log(players[socket.id]);
-    count++;
+    var player = new Player('foo', socket.id);
+    players[socket.id] = player;
+    // console.log(players);
 
     // EVENT HANDLERS
 
@@ -72,13 +69,12 @@ io.on('connection', function(socket) {
         } else {
             console.log('making room');
             var room = new Room(roomName);
-            console.log(room);
-            socket.leave(players[socket.id].room);
+            var oldRoom = players[socket.id].room;
 
             socket.join(roomName);
-            players[socket.id].room = roomName;
-            console.log(players[socket.id]);
-            
+            socket.leave(oldRoom);
+            players[socket.id].setRoom(roomName);
+
             socket.emit('success', 
                         '\"' + roomName + '\" successfully created.', 
                         room);
@@ -90,8 +86,12 @@ io.on('connection', function(socket) {
         console.log(roomName);
         var room = rooms[roomName];
         if (room !== undefined && room.canJoin === true) {
-            socket.leave(players[socket.id].room);
+            var oldRoom = players[socket.id].room;
+
             socket.join(roomName);
+            socket.leave(oldRoom);
+            players[socket.id].setRoom(roomName);
+            
             socket.emit('success', 'Welcome to ' + roomName, room);
         } else {
             socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
