@@ -4,6 +4,10 @@ var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 function afterReady() {
+    var regPopup = new $.Popup();
+    console.log(regPopup.options);
+    regPopup.open('views/register.html');
+
     $('.popup').popup({
         width: 500,
         heigth: 150,
@@ -28,10 +32,13 @@ function afterReady() {
         receiveMsg(msg);
         $('#message').val('');
     });
-
 }
 
 // SOCKET EVENT LISTENERS
+
+socket.on('register', function() {
+    // call popup to register
+});
 
 socket.on('message', function(data) {
     receiveMsg(data.msg, data.id);
