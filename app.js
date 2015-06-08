@@ -2,6 +2,8 @@ var express = require('express');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var Room = require('./room.js');
+var Player = require('./player.js');
 
 // CONFIGURATION
 app.use(express.static(__dirname + '/public'));
@@ -11,52 +13,86 @@ app.get('/', function(req, res) {
     res.sendFile('index.html');
 });
 
-// rooms_active - keeps track of the rooms active currently
-var activeRooms = {};
+/*
+rooms - object with room (object)
+1. room
+
+room - object with
+-name
+-access
+-password
+-players
+-chatHistory
+
+players - objects with 
+-name
+-role
+-room
+
+*/
+var rooms = {
+    'lobby': { 
+        name: 'lobby',
+        access: true,
+        password: '',
+        players: [],
+        chatHistory: []
+    }
+};
+
+var players = {
+    'bot': {
+        name: 'bot',
+        role: 'admin',
+        room: 'lobby'
+    }
+};
+
+module.exports.players = players;
 
 io.on('connection', function(socket) {
     console.log('a user connected');
-    console.log('socketid: ' + socket.id);
-    
-    socket.on('echo', function(data) {
-        socket.emit('echo', data);
-    });
+    console.log('socket id: ' + socket.id);
 
-    // activeRooms - keeps track of the rooms active currently
-    var activeRooms = {
-        'room1': { 
-            "owner": 123,
-            "canJoin": true
-        }
-    };
+    // Initialise new player
+    var player = new Player('foo', socket.id);
+    players[socket.id] = player;
+    // console.log(players);
 
     // EVENT HANDLERS
 
     // create new room for the user.
     socket.on('create-room', function(roomName) {
-        if (activeRooms.hasOwnProperty(roomName)) {
+        if (rooms.hasOwnProperty(roomName)) {
+            console.log("create room error");
             socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
         } else {
-            activeRooms.roomName = {
-                "owner": socket.id,
-                "canJoin": true
-            };
+            console.log('making room');
+            var room = new Room(roomName);
+            var oldRoom = players[socket.id].room;
 
             socket.join(roomName);
+            socket.leave(oldRoom);
+            players[socket.id].setRoom(roomName);
+
             socket.emit('success', 
                         '\"' + roomName + '\" successfully created.', 
-                        roomName);
+                        room);
         }
-
     });
 
     // handle room joining
     socket.on('join-room', function(roomName) {
         console.log(roomName);
-        var room = activeRooms[roomName];
+        var room = rooms[roomName];
         if (room !== undefined && room.canJoin === true) {
+            var oldRoom = players[socket.id].room;
+
             socket.join(roomName);
-            socket.emit('success', 'Welcome to ' + roomName, roomName);
+            socket.leave(oldRoom);
+            players[socket.id].setRoom(roomName);
+            
+            socket.emit('success', 'Welcome to ' + roomName, room);
         } else {
             socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
         }

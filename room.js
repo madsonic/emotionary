@@ -15,14 +15,6 @@ function Room(name, access, password) {
     this.chatHistory = [];
 }
 
-function Room(name) {
-    this.name = name;
-    this.access = true;
-    this.password = '';
-    this.people = [];
-    this.chatHistory = [];
-}
-
 Room.prototype.getName = function() {
     return this.name;
 };
@@ -45,4 +37,4 @@ Room.prototype.getChatHistory = function() {
     return this.chatHistory;
 };
 
-module.exports = Room;
+var exports = module.exports = Room;
