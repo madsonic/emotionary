@@ -5,7 +5,7 @@ var socket = io();
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 function afterReady() {
     var regPopup = new $.Popup();
-    console.log(regPopup.options);
+    regPopup.o.modal = true;
     regPopup.open('views/register.html');
 
     $('.popup').popup({
