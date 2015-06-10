@@ -7,6 +7,7 @@ function afterReady() {
     // register name on load
     var regPopup = new $.Popup();
     regPopup.o.modal = true;
+    regPopup.o.closeContent = '';
     regPopup.o.afterOpen = function() {
             // submit does not work for some reason
             $('form #register').click(function(e) {
