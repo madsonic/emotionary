@@ -4,10 +4,21 @@ var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 function afterReady() {
+    // register name on load
     var regPopup = new $.Popup();
     regPopup.o.modal = true;
+    regPopup.o.afterOpen = function() {
+            // submit does not work for some reason
+            $('form #register').click(function(e) {
+                console.log("submitting name");
+                var name = $('#nickname').val();
+                console.log('name: '+name);
+                register(name);
+        });
+    };
     regPopup.open('views/register.html');
 
+    // page popup elements
     $('.popup').popup({
         width: 500,
         heigth: 150,
@@ -57,6 +68,10 @@ socket.on('success', function(msg, data) {
 });
 
 // SOCKET EVENT EMITTERS
+
+function register(nickname) {
+    socket.emit('register', nickname);
+}
 
 function createRoom(roomName) {
     socket.emit('create-room', roomName);

@@ -54,12 +54,15 @@ io.on('connection', function(socket) {
     console.log('a user connected');
     console.log('socket id: ' + socket.id);
 
-    // Initialise new player
-    var player = new Player('foo', socket.id);
-    players[socket.id] = player;
-    // console.log(players);
-
     // EVENT HANDLERS
+
+    // handle user registration
+    socket.on('register', function(nickname) {
+        console.log("server register: " + nickname);
+        var player = new Player(nickname, socket.id);
+        players[socket.id] = player;
+        console.log(players);
+    });
 
     // create new room for the user.
     socket.on('create-room', function(roomName) {
