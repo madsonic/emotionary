@@ -62,6 +62,7 @@ io.on('connection', function(socket) {
         var player = new Player(nickname, socket.id);
         players[socket.id] = player;
         console.log(players);
+        socket.emit('register-success');
     });
 
     // create new room for the user.

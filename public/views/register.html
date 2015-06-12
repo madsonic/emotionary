@@ -10,7 +10,12 @@
         <form id="registration">
             <div class="form-group">
                 <label for="nickname">Nickname</label>
-                <input type="text" class="form-control" id="nickname" placeholder="Choose a nickname to start" autocomplete>
+                <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Choose a nickname to start" autocomplete>
+            </div>
+            <!-- error message -->
+            <div class="alert alert-danger" role="alert" hidden>
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                <span class="err-msg"></span>
             </div>
             <div class="submit-btn">
                 <button type="submit" class="btn btn-success" id="register">Let's GO</button>
