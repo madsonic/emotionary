@@ -11,7 +11,7 @@ function afterReady() {
         afterOpen: function() {
             // submit does not work for some reason
             $('form #register').click(function(e) {
-                var name = $('#nickname').val();
+                var name = $('#registration input#nickname').val();
                 $alert = $('.alert-danger');
                 console.log('name: '+name);
 
@@ -30,10 +30,14 @@ function afterReady() {
                     register(name);
 
                     // Handle successful registration
-                    socket.on('register-success', function() {
+                    socket.on('register-success', function(player) {
                         console.log('register success');
                         $alert.hide();
                         regPopup.close();
+
+                        // Update info
+                        $('.room #rm-name').text('Room name: ' + player.getRoom());
+                        $('.room #nickname').text('Nickname: ' + player.name);
                     });
 
                     // Handle failed registration

@@ -68,11 +68,12 @@ io.on('connection', function(socket) {
             socket.emit('register-fail');
         } else {
             console.log('new nickname');
-            players[socket.id] = new Player(nickname, socket.id);
+            var player = new Player(nickname, socket.id);
+            players[socket.id] = player;
             nicknames.push(nickname);
             console.log(players);
             console.log(nicknames);
-            socket.emit('register-success');
+            socket.emit('register-success', player);
         }
     });
 
