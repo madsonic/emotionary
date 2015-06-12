@@ -6,7 +6,7 @@ var socket = io();
 function afterReady() {
     // register name on load
     var regPopup = new $.Popup({
-        // modal: true,
+        modal: true,
         closeContent: '',
         afterOpen: function() {
             // submit does not work for some reason
