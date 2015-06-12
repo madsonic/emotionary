@@ -48,6 +48,8 @@ var players = {
     }
 };
 
+var nicknames = [];
+
 module.exports.players = players;
 
 io.on('connection', function(socket) {
