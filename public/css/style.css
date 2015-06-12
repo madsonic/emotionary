@@ -59,6 +59,9 @@ a.popup {
     color: #000;
 }
 
+form#registration .submit-btn{ 
+    text-align: center; 
+}
 .room-form h3 {
     text-align: center;
 }

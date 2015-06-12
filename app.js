@@ -41,12 +41,14 @@ var rooms = {
 };
 
 var players = {
-    'bot': {
+    'socketid': {
         name: 'bot',
         role: 'admin',
         room: 'lobby'
     }
 };
+
+var nicknames = ['bot'];
 
 module.exports.players = players;
 
@@ -54,12 +56,26 @@ io.on('connection', function(socket) {
     console.log('a user connected');
     console.log('socket id: ' + socket.id);
 
-    // Initialise new player
-    var player = new Player('foo', socket.id);
-    players[socket.id] = player;
-    // console.log(players);
-
     // EVENT HANDLERS
+
+    // handle user registration
+    socket.on('register', function(nickname) {
+        console.log("server register: " + nickname);
+
+        // Checks if nickname is used
+        if (nicknames.indexOf(nickname) !== -1) {
+            console.log('nickname already exists');
+            socket.emit('register-fail');
+        } else {
+            console.log('new nickname');
+            var player = new Player(nickname, socket.id);
+            players[socket.id] = player;
+            nicknames.push(nickname);
+            console.log(players);
+            console.log(nicknames);
+            socket.emit('register-success', player);
+        }
+    });
 
     // create new room for the user.
     socket.on('create-room', function(roomName) {
