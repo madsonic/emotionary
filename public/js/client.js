@@ -29,7 +29,7 @@ function afterReady() {
                     // to join a default room
                     register(name);
 
-                    // handle successful registration
+                    // Handle successful registration
                     socket.on('register-success', function() {
                         console.log('register success');
                         $alert.hide();
@@ -41,7 +41,7 @@ function afterReady() {
                     socket.on('register-fail', function() {
                         console.log('register fail');
                         $('.err-msg').text('');
-                        $('.err-msg').text("Try another nickname");
+                        $('.err-msg').text("Nickname is in use. Try another nickname");
                         if ($alert.attr('hidden') === 'hidden') {
                             $alert.show();
                         }
