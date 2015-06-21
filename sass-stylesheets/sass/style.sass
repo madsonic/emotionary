@@ -1,0 +1,67 @@
+// Bootstrap sass sheets
+@import "../bootstrap-3.3.5/stylesheets/bootstrap"
+
+// Variable and mixins
+@import "variables"
+@import "mixins"
+
+body
+  padding-top: $navbar-height
+  font: 13px Helvetica, Arial
+
+.navbar p
+  margin: 0
+
+.main-container-fluid
+  padding: 0
+
+.text-box
+  background: #e6e6e6
+  padding: 10px
+  position: fixed
+  bottom: 0
+  width: 100%
+  
+  div:last-child
+    @include no-lr-padding
+
+  [class*="col-"]
+    @include no-left-padding
+
+  #message:focus
+    outline: none
+
+#send-message
+  width: 100%
+
+#messages
+  list-style-type: none
+  margin: 0
+  padding: 0
+
+  li
+    padding: 5px 10px
+
+  li:nth-child(odd)
+    background: #eee
+
+a.popup
+  text-decoration: none
+  color: #000
+
+.room-form
+  h3
+    text-align: center
+
+  input, button
+    display: block
+    margin: 5px auto
+
+.alert-danger
+  display: none
+  position: fixed
+  margin: 5px
+  padding: 10px
+  width: 100%
+  text-align: center
+  opacity: 0.95
