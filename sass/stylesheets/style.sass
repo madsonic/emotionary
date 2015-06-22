@@ -6,21 +6,20 @@
 @import "mixins"
 
 body
-  padding-top: $navbar-height
   font: 13px Helvetica, Arial
 
 .navbar p
   margin: 0
 
-.main-container-fluid
-  padding: 0
+.container-fluid
+  @include no-lr-padding
 
 .text-box
-  background: #e6e6e6
-  padding: 10px
   position: fixed
   bottom: 0
   width: 100%
+  padding: $text-box-padding
+  background: #e6e6e6
   
   div:last-child
     @include no-lr-padding
@@ -35,9 +34,11 @@ body
   width: 100%
 
 #messages
-  list-style-type: none
+  padding-top: $navbar-height
+  padding-bottom: $text-box-height
+  @include no-lr-padding
   margin: 0
-  padding: 0
+  list-style-type: none
 
   li
     padding: 5px 10px
