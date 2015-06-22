@@ -6,7 +6,7 @@ var socket = io();
 function afterReady() {
     var regPopup = new $.Popup();
     console.log(regPopup.options);
-    regPopup.open('views/register.html');
+    // regPopup.open('views/register.html');
 
     $('.popup').popup({
         width: 500,
@@ -72,10 +72,12 @@ function sendMsg(msg, id) {
 
 // HELPER
 function receiveMsg(msg, sender) {
+    console.log('from others')
     $('#messages').append("<li>" + sender + ": " + msg);
 }
 
 function receiveMsg(msg) {
+    console.log('from yourself')
     $('#messages').append("<li>you: " + msg);    
 }
 

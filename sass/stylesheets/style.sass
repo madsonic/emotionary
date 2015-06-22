@@ -1,0 +1,44 @@
+// Bootstrap sass sheets
+@import "../bootstrap-3.3.5/stylesheets/bootstrap"
+
+// Variable and mixins
+@import "variables"
+@import "mixins"
+
+// Scafolding
+
+body
+  font: 13px Helvetica, Arial
+
+
+.container-fluid
+  @include no-lr-padding
+
+// Body components
+
+@import "navbar"
+@import "text-box"
+@import "messages"
+
+// Popup
+
+a.popup
+  text-decoration: none
+  color: #000
+
+.room-form
+  h3
+    text-align: center
+
+  input, button
+    display: block
+    margin: 5px auto
+
+.alert-danger
+  display: none
+  position: fixed
+  margin: 5px
+  padding: 10px
+  width: 100%
+  text-align: center
+  opacity: 0.95
