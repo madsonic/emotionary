@@ -5831,10 +5831,6 @@ button.close {
   #messages li:nth-child(odd) {
     background: #eee; }
 
-a.popup {
-  text-decoration: none;
-  color: #000; }
-
 .alert-danger {
   display: none;
   position: fixed;

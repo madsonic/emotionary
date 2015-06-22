@@ -4,25 +4,13 @@ var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 function afterReady() {
-    var regPopup = new $.Popup();
-    console.log(regPopup.options);
-    regPopup.open('views/register.html');
-
-    $('.popup').popup({
-        width: 500,
-        heigth: 150,
-        afterOpen: function() {
-            $('#join-room').click(function() {
-                var roomName = $('#roomName').val();
-                joinRoom(roomName);
-            });
-
-            $('#create-room').click(function() {
-                var roomName = $('#roomName').val();
-                createRoom(roomName);
-            });
-        }
-
+    // Loads registration modal on ready
+    $('.modal-content').load('views/register.html', function() {
+        $('.modal').modal({
+            show: true,
+            backdrop: 'static',
+            keyboard: false,
+        });
     });
 
     $('#send-message').click(function(e) {
