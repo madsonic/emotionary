@@ -25,8 +25,9 @@ function afterReady() {
 
     });
 
-    $('#send-message').click(function() {
+    $('#send-message').click(function(e) {
         console.log("clicking send")
+        e.preventDefault();
         var msg = $('#message').val();
         sendMsg(msg, socket.id);
         receiveMsg(msg);
