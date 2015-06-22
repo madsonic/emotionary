@@ -8,6 +8,7 @@
     "url": "https://github.com/varunpatro/quizbomb.git"
   },
   "dependencies": {
+    "express": "^4.12.4",
     "socket.io": "^1.3.5"
   },
   "devDependencies": {

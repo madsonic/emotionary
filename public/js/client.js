@@ -25,10 +25,6 @@ function afterReady() {
 
 // SOCKET EVENT LISTENERS
 
-socket.on('register', function() {
-    // call popup to register
-});
-
 socket.on('message', function(data) {
     receiveMsg(data.msg, data.id);
 });
@@ -40,12 +36,20 @@ socket.on('room-error', function(errMsg) {
 });
 
 socket.on('success', function(msg, data) {
-    $('.popup_close').click();
-    $('#messages').append('<li class="admin">' + msg);
-    $('.room p').text('Room name: ' + data.name);
+    // get the popup object
+    if (msg !== undefined) {
+        $('#messages').append('<li class="admin">' + msg);
+    }
+    if (data !== undefined) {
+        $('.room p').text('Room name: ' + data.name);
+    }
 });
 
 // SOCKET EVENT EMITTERS
+
+function register(nickname) {
+    socket.emit('register', nickname);
+}
 
 function createRoom(roomName) {
     socket.emit('create-room', roomName);
