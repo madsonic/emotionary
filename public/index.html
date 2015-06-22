@@ -26,18 +26,29 @@
             <div class="navbar-collapse collapse navbar-right">
                 <ul class="nav navbar-nav">
                     <li><a href="">Room Name:</a></li>
+                    <!-- Modal triggers -->
                     <li>
-                        <a href="views/create-room.html" class="popup">Create Room</a>
+                        <a href="views/create-room.html" data-toggle="modal" data-target=".modal">Create Room</a>
                     </li>
                     <li>
-                        <a href="views/join-room.html" class="popup">Join Room</a>
+                        <a href="views/join-room.html" data-toggle="modal" data-target=".modal">Join Room</a>
                     </li>
                 </ul>
             </div>
 
         </div>
     </nav>
+
+<!-- Modal -->
+<div class="modal fade" role="dialog">
+    <div class="modal-dialog">
         
+        <!-- Modal content -->
+        <div class="modal-content"></div>
+
+    </div>
+</div>
+ 
     <div class="main-container-fluid container-fluid">
 
         <!-- message history -->

@@ -6,7 +6,7 @@ var socket = io();
 function afterReady() {
     var regPopup = new $.Popup();
     console.log(regPopup.options);
-    // regPopup.open('views/register.html');
+    regPopup.open('views/register.html');
 
     $('.popup').popup({
         width: 500,
