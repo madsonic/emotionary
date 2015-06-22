@@ -5795,9 +5795,6 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
-body {
-  font: 13px Helvetica, Arial; }
-
 .container-fluid {
   padding-left: 0;
   padding-right: 0; }
@@ -5833,16 +5830,6 @@ body {
     padding: 5px 10px; }
   #messages li:nth-child(odd) {
     background: #eee; }
-
-a.popup {
-  text-decoration: none;
-  color: #000; }
-
-.room-form h3 {
-  text-align: center; }
-.room-form input, .room-form button {
-  display: block;
-  margin: 5px auto; }
 
 .alert-danger {
   display: none;

@@ -16,28 +16,41 @@
 
   <body>
 
+    <!-- Modal -->
+    <div class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            
+            <!-- Modal content -->
+            <div class="modal-content"></div>
+
+        </div>
+    </div>
+
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
 
             <div class="navbar-header">
-                <p class="navbar-brand">Quiz Bomb</p>
+                <!-- Modal trigger -->
+                <a href="views/register.html" class="navbar-brand text-capitalize" id="show-register" data-toggle="modal" data-target=".modal">Quiz Bomb</a>
             </div>
 
             <div class="navbar-collapse collapse navbar-right">
                 <ul class="nav navbar-nav">
                     <li><a href="">Room Name:</a></li>
+                    <!-- Modal triggers -->
                     <li>
-                        <a href="views/create-room.html" class="popup">Create Room</a>
+                        <a href="views/create-room.html" data-toggle="modal" data-target=".modal">Create Room</a>
                     </li>
                     <li>
-                        <a href="views/join-room.html" class="popup">Join Room</a>
+                        <a href="views/join-room.html" data-toggle="modal" data-target=".modal">Join Room</a>
                     </li>
                 </ul>
             </div>
 
         </div>
     </nav>
-        
+
+ 
     <div class="main-container-fluid container-fluid">
 
         <!-- message history -->
@@ -98,10 +111,7 @@
 
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="/vendor/js/jquery.popup.min.js"></script>
-
-    <script src="js/client.js"></script>
-
+    
   </body>
 
 </html>
