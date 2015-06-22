@@ -5,46 +5,22 @@
 @import "variables"
 @import "mixins"
 
+// Scafolding
+
 body
   font: 13px Helvetica, Arial
 
-.navbar p
-  margin: 0
 
 .container-fluid
   @include no-lr-padding
 
-.text-box
-  position: fixed
-  bottom: 0
-  width: 100%
-  padding: $text-box-padding
-  background: #e6e6e6
-  
-  div:last-child
-    @include no-lr-padding
+// Body components
 
-  [class*="col-"]
-    @include no-left-padding
+@import "navbar"
+@import "text-box"
+@import "messages"
 
-  #message:focus
-    outline: none
-
-#send-message
-  width: 100%
-
-#messages
-  padding-top: $navbar-height
-  padding-bottom: $text-box-height
-  @include no-lr-padding
-  margin: 0
-  list-style-type: none
-
-  li
-    padding: 5px 10px
-
-  li:nth-child(odd)
-    background: #eee
+// Popup
 
 a.popup
   text-decoration: none

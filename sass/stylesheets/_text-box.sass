@@ -1,0 +1,20 @@
+// Text box
+
+.text-box
+  position: fixed
+  bottom: 0
+  width: 100%
+  padding: $text-box-padding
+  background: #e6e6e6
+  
+  div:last-child
+    @include no-lr-padding
+
+  [class*="col-"]
+    @include no-left-padding
+
+  #message:focus
+    outline: none
+
+#send-message
+  width: 100%

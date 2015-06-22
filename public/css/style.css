@@ -5798,12 +5798,12 @@ button.close {
 body {
   font: 13px Helvetica, Arial; }
 
-.navbar p {
-  margin: 0; }
-
 .container-fluid {
   padding-left: 0;
   padding-right: 0; }
+
+.navbar p {
+  margin: 0; }
 
 .text-box {
   position: fixed;
@@ -5823,10 +5823,10 @@ body {
   width: 100%; }
 
 #messages {
-  padding-top: 50px;
-  padding-bottom: 54px;
   padding-left: 0;
   padding-right: 0;
+  padding-top: 50px;
+  padding-bottom: 54px;
   margin: 0;
   list-style-type: none; }
   #messages li {
