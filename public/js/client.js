@@ -13,6 +13,23 @@ function afterReady() {
         });
     });
 
+    // Insert content dynamically so that a common modal can be used
+    $('.modal').on('show.bs.modal', function(e) {
+        var dir = $(e.relatedTarget).attr('href');
+
+        // insert content for modals called via click
+        if (dir !== undefined) {
+            var $modal = $(this);
+            var $content = $modal.find('.modal-content');
+
+            // clears content
+            $content.html('');
+
+            // load new content
+            $('.modal-content').load(dir);
+        }
+    });
+
     $('#send-message').click(function(e) {
         console.log("clicking send")
         e.preventDefault();
