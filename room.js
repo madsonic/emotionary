@@ -9,8 +9,8 @@ room - object with
 
 function Room(name, access, password) {
     this.name = name;
-    this.access = access;
-    this.password = password;
+    this.access = access === undefined ? true : acesss;
+    this.password = password === undefined ? '' : password;
     this.people = [];
     this.chatHistory = [];
 }
@@ -29,7 +29,7 @@ Room.prototype.setName = function(name) {
     }
 };
 
-Room.prototype.getAccess = function() {
+Room.prototype.isOpen = function() {
     return this.access;
 };
 

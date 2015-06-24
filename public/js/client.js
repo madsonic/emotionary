@@ -30,6 +30,31 @@ function afterReady() {
         }
     });
 
+    // User registration handler
+    $('.modal').on('submit', 'form', function(e) {
+        e.preventDefault();
+        console.log(e);
+
+        // Send data
+        var $input = $(this).find('input');
+        var val = $input.val();
+        var id = $(this).attr('id');
+
+        if (id === 'registration') {
+            register(val);
+        } else if (id === 'create-room') {
+            console.log('emit create rm event');
+            createRoom(val);
+        } else if (id === 'join-room') {
+            console.log('emit join room event');
+            joinRoom(val);
+        }
+
+        // Close modal when successful
+        $('.modal').modal('hide');
+    });
+
+    // Send message event handler
     $('#send-message').click(function(e) {
         console.log("clicking send")
         e.preventDefault();
@@ -52,14 +77,37 @@ socket.on('room-error', function(errMsg) {
     $('.alert-danger').show();
 });
 
-socket.on('success', function(msg, data) {
-    // get the popup object
-    if (msg !== undefined) {
-        $('#messages').append('<li class="admin">' + msg);
-    }
-    if (data !== undefined) {
-        $('.room p').text('Room name: ' + data.name);
-    }
+// socket.on('registration-success', function(data) {
+//     console.log("registration success");
+//     $('.modal').modal('hide');
+
+//     // Append welcome message
+//     $('.message-history').append("<li class='announcement'>" + data.msg);
+//     $('#rm-name').text(data.room.name);
+// });
+
+<<<<<<< HEAD
+socket.on('register-fail', function() {
+    console.log('registration fail')
+});
+=======
+// socket.on('registration-fail', function() {
+//     console.log('registration fail')
+// });
+
+// socket.on('create-rm-success', function(data) {
+//     console.log('create rm success');
+//     $('.modal').modal('hide');
+//     $('.message-history').append("<li class='announcement'>" + data.msg);
+//     $('#rm-name').text(data.room.name);
+// })
+>>>>>>> Refactor success events
+
+socket.on('rm-update-success', function(data) {
+    console.log('success');
+    $('.modal').modal('hide');
+    $('.message-history').append("<li class='announcement'>" + data.msg);
+    $('#rm-name').text(data.room.name);    
 });
 
 // SOCKET EVENT EMITTERS
