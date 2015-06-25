@@ -1,39 +1,15 @@
-<!-- 
-legacy code for reference
-<div class="room-form">
-    
-    <div class="alert alert-danger" role="alert" hidden>
-        <span class="glyphicon glyphicon-exclamation-sign"></span>
-    </div>
-
-    <h3>Join Room</h3>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="input-group">
-          <input type="text" class="form-control" name="roomName" id="roomName" placeholder="Room Name" autofocus>
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button" id="join-room">Join!</button>
-          </span>
-        </div>
-      </div>
-    </div>
-</div> -->
-
 <div class="modal-header">
-        <button class="close" type="button" data-dismiss="modal">&times;</button>
-        <h3 class="modal-title text-capitalize">join room</h3>
-    </div>
-
-    <div class="modal-body">
-        <form id="join-room" role="form">
-            <div class="form-group">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Room Name">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default btn-success text-capitalize" type="submit">join!</button>
-                    </span>
-                </div> <!-- input-group -->
-            </div> <!-- form-group -->
-        </form> <!-- form -->
-    </div> <!-- modal-body -->
+    <button class="close" type="button" data-dismiss="modal">&times;</button>
+    <h3 class="modal-title text-capitalize">join room</h3>
 </div>
+
+<div class="modal-body">
+    <form id="join-room" role="form">
+        <div class="form-group has-feedback">
+            <label>Room Name</label>
+            <input type="text" class="form-control" placeholder="Room Name">
+            <span class='glyphicon form-control-feedback'></span>
+        </div> <!-- form-group -->
+        <button class="btn btn-default btn-success text-capitalize" type="submit" disabled>join!</button>
+    </form> <!-- form -->
+</div> <!-- modal-body -->

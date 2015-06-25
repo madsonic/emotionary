@@ -41,6 +41,7 @@ function afterReady() {
         var id = $(this).attr('id');
 
         if (id === 'registration') {
+            console.log('emit registration event');
             register(val);
         } else if (id === 'create-room') {
             console.log('emit create rm event');
@@ -49,9 +50,21 @@ function afterReady() {
             console.log('emit join room event');
             joinRoom(val);
         }
+    });
 
-        // Close modal when successful
-        $('.modal').modal('hide');
+    // Validation visuals based on keystroke
+    var waiting;
+    $('.modal').on('keyup', 'form input', function() {
+        var $form = $('.modal form');
+        var $self = $(this);
+
+        // Wait for user to 'finish' typing
+        clearTimeout(waiting);
+        waiting = setTimeout(function() {
+
+            checkInput($form.attr('id'), $self.val());
+
+        }, 500);
     });
 
     // Send message event handler
@@ -71,43 +84,68 @@ socket.on('message', function(data) {
     receiveMsg(data.msg, data.id);
 });
 
-socket.on('room-error', function(errMsg) {
-    // reveal alert message
-    $('.alert-danger').append(errMsg);
-    $('.alert-danger').show();
-});
-
-// socket.on('registration-success', function(data) {
-//     console.log("registration success");
-//     $('.modal').modal('hide');
-
-//     // Append welcome message
-//     $('.message-history').append("<li class='announcement'>" + data.msg);
-//     $('#rm-name').text(data.room.name);
-// });
-
-<<<<<<< HEAD
-socket.on('register-fail', function() {
-    console.log('registration fail')
-});
-=======
-// socket.on('registration-fail', function() {
-//     console.log('registration fail')
-// });
-
-// socket.on('create-rm-success', function(data) {
-//     console.log('create rm success');
-//     $('.modal').modal('hide');
-//     $('.message-history').append("<li class='announcement'>" + data.msg);
-//     $('#rm-name').text(data.room.name);
-// })
->>>>>>> Refactor success events
-
 socket.on('rm-update-success', function(data) {
     console.log('success');
+
     $('.modal').modal('hide');
     $('.message-history').append("<li class='announcement'>" + data.msg);
     $('#rm-name').text(data.room.name);    
+});
+
+socket.on('form-accept', function() {
+    console.log('form ok')
+    var $form = $('.modal form');
+
+    // Input box visuals
+    var $formGroup = $form.find('.form-group');
+    var $icon = $form.find('.glyphicon');
+    $formGroup
+        .removeClass('has-error')
+        .removeClass('has-success')
+        .addClass('has-success');
+
+    $icon
+        .removeClass('glyphicon-remove')
+        .removeClass('glyphicon-ok')
+        .addClass('glyphicon-ok');
+
+    // Remove any alert message
+    $form.find('.alert').remove();
+
+    // Enable submit button
+    $form.find('button[type="submit"]').prop('disabled', false);
+});
+
+socket.on('form-reject', function(errMsg) {
+    console.log('form not ok')
+    var $form = $('.modal form');
+
+    // Input box visuals
+    var $formGroup = $form.find('.form-group');
+    var $icon = $form.find('.glyphicon');
+    
+    $form.find('.form-group')
+        .removeClass('has-success')
+        .removeClass('has-error')
+        .addClass('has-error');
+
+    $form.find('.glyphicon')
+        .removeClass('glyphicon-ok')
+        .removeClass('glyphicon-remove')
+        .addClass('glyphicon-remove');
+
+    // Add/replace alert message
+    var $alert = $form.find('.alert');
+    var m = "<div class='alert alert-danger'>" + errMsg + "</div>";
+    
+    if ($alert.length === 0) { // New error
+        $form.find('.form-group').after(m);
+    } else { // Recurring error
+        $alert.html(errMsg);
+    }
+
+    // Disable submit button
+    $form.find('button[type="submit"]').prop('disabled', true);
 });
 
 // SOCKET EVENT EMITTERS
@@ -122,6 +160,10 @@ function createRoom(roomName) {
 
 function joinRoom(roomName) {
     socket.emit('join-room', roomName);
+}
+
+function checkInput(formName, val) {
+    socket.emit('validate', formName, val);
 }
 
 function sendMsg(msg, id) {

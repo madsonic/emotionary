@@ -60,31 +60,24 @@ io.on('connection', function(socket) {
 
     // handle user registration
     socket.on('register', function(nickname) {
-        console.log("server register: " + nickname);
+       console.log("server register: " + nickname + " " + socket.id);
+ 
+        var player = new Player(nickname, socket.id);
+        players[socket.id] = player;
 
-        // Checks if nickname is used
-        if (nicknames.indexOf(nickname) !== -1) {
-            console.log('nickname already exists');
-            socket.emit('register-fail');
-        } else {
-            console.log('new nickname' + socket.id);
-            var player = new Player(nickname, socket.id);
-            players[socket.id] = player;
+        rooms.lobby.players.push(socket.id);
 
-            rooms.lobby.players.push(socket.id);
+        nicknames.push(nickname);
+        console.log(players);
+        console.log(nicknames);
 
-            nicknames.push(nickname);
-            console.log(players);
-            console.log(nicknames);
-
-            // Declare success to client
-            socket
-              .emit('rm-update-success', 
-                    {
-                      msg: 'Welcome ' + nickname, 
-                      room: player.getRoom(),
-                    });
-        }
+        // Declare success to client
+        socket
+          .emit('rm-update-success', 
+                {
+                  msg: 'Welcome ' + nickname, 
+                  room: player.getRoom(),
+                });
     });
 
     // create new room for the user.
@@ -135,16 +128,48 @@ io.on('connection', function(socket) {
             socket.join(roomName);
             socket.leave(oldRmName);
             players[socket.id].setRoom(roomName);
-<<<<<<< HEAD
-            
-            socket.emit('success', 'Welcome to ' + roomName, room);
-        } else {
-            socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
-=======
 
-            var msg = 'Welcome to ' + roomName         
+            var msg = 'Welcome to \'' + roomName + '\''
             socket.emit('rm-update-success', {msg: msg, room: newRm});
->>>>>>> Refactor success events
+        }
+    });
+
+    // Handle input validation
+    socket.on('validate', function(formName, val) {
+        console.log('validating')
+        switch (formName) {
+
+            case 'registration':
+                if (nicknames.indexOf(val) === -1) {
+                    socket.emit('form-accept');
+                } else {
+                    socket
+                        .emit('form-reject', 
+                              '\'' + val + '\' already in use');
+                }
+                break;
+
+            case 'create-room':
+                console.log('create room');
+                if (rooms.hasOwnProperty(val)) {
+                    socket
+                        .emit('form-reject', 
+                              '\'' + val + '\' already exists');
+                } else {
+                    socket.emit('form-accept');
+                }
+                break;
+
+            case 'join-room':
+                console.log('join room');
+                if (rooms.hasOwnProperty(val)) {
+                    socket.emit('form-accept');
+                } else {
+                    socket
+                        .emit('form-reject',
+                              '\'' + val + '\' does not exists');
+                }
+                break;
         }
     });
 

@@ -252,8 +252,8 @@ th {
     border: 1px solid #ddd !important; } }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+  src: url("../../fonts/bootstrap/glyphicons-halflings-regular.eot");
+  src: url("../../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../../fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("../../fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 .glyphicon {
   position: relative;
   top: 1px;
@@ -1251,7 +1251,7 @@ mark,
 .text-right {
   text-align: right; }
 
-.text-center {
+.text-center, .message-history .announcement {
   text-align: center; }
 
 .text-justify {
@@ -5819,25 +5819,16 @@ button.close {
 #send-message {
   width: 100%; }
 
-#messages {
+.message-history {
   padding-left: 0;
   padding-right: 0;
   padding-top: 50px;
   padding-bottom: 54px;
   margin: 0;
   list-style-type: none; }
-  #messages li {
+  .message-history li {
     padding: 5px 10px; }
-  #messages li:nth-child(odd) {
+  .message-history li:nth-child(odd) {
     background: #eee; }
-
-.alert-danger {
-  display: none;
-  position: fixed;
-  margin: 5px;
-  padding: 10px;
-  width: 100%;
-  text-align: center;
-  opacity: 0.95; }
 
 /*# sourceMappingURL=main.css.map */
