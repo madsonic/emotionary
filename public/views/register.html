@@ -1,25 +1,14 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="page-header">
-                <h1>Welcome to Quizbomb!</h1>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <form id="registration">
-            <div class="form-group">
-                <label for="nickname">Nickname</label>
-                <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Choose a nickname to start" autocomplete>
-            </div>
-            <!-- error message -->
-            <div class="alert alert-danger" role="alert" hidden>
-                <span class="glyphicon glyphicon-exclamation-sign"></span>
-                <span class="err-msg"></span>
-            </div>
-            <div class="submit-btn">
-                <button type="submit" class="btn btn-success" id="register">Let's GO</button>
-            </div>
-        </form>
-    </div>
+<div class="modal-header">
+    <h1 class="modal-title text-capitalize">Welcome to Quiz Bomb!</h1>
 </div>
+
+<div class="modal-body">
+    <form id="registration" role="form">
+        <div class="form-group has-feedback">
+            <label><span class="gylphicon gylphicon-user"></span>Nickname</label>
+            <input class="form-control" type="text" placeholder="Chose a unique nickname">
+            <span class='glyphicon form-control-feedback'></span>
+        </div> <!-- form-group -->
+        <button class="btn btn-default btn-success text-capitalize" type="submit" disabled>let's go</button>
+    </form> <!-- form -->
+</div> <!-- modal-body -->

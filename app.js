@@ -60,57 +60,116 @@ io.on('connection', function(socket) {
 
     // handle user registration
     socket.on('register', function(nickname) {
-        console.log("server register: " + nickname);
+       console.log("server register: " + nickname + " " + socket.id);
+ 
+        var player = new Player(nickname, socket.id);
+        players[socket.id] = player;
 
-        // Checks if nickname is used
-        if (nicknames.indexOf(nickname) !== -1) {
-            console.log('nickname already exists');
-            socket.emit('register-fail');
-        } else {
-            console.log('new nickname');
-            var player = new Player(nickname, socket.id);
-            players[socket.id] = player;
-            nicknames.push(nickname);
-            console.log(players);
-            console.log(nicknames);
-            socket.emit('register-success', player);
-        }
+        rooms.lobby.players.push(socket.id);
+
+        nicknames.push(nickname);
+        console.log(players);
+        console.log(nicknames);
+
+        // Declare success to client
+        socket
+          .emit('rm-update-success', 
+                {
+                  msg: 'Welcome ' + nickname, 
+                  room: player.getRoom(),
+                });
     });
 
     // create new room for the user.
     socket.on('create-room', function(roomName) {
+
         if (rooms.hasOwnProperty(roomName)) {
             console.log("create room error");
             socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
         } else {
             console.log('making room');
-            var room = new Room(roomName);
-            var oldRoom = players[socket.id].room;
+            var newRoom = new Room(roomName);
+            var oldRoom = players[socket.id].getRoom();
 
+            // Update player status
             socket.join(roomName);
             socket.leave(oldRoom);
             players[socket.id].setRoom(roomName);
 
-            socket.emit('success', 
-                        '\"' + roomName + '\" successfully created.', 
-                        room);
+            // Update room list
+            rooms[roomName] = newRoom;
+
+            console.log(rooms);
+
+            socket.emit('rm-update-success', 
+                        {
+                            msg: '\"' + roomName + '\" successfully created.', 
+                            room: newRoom
+                        });
         }
     });
 
     // handle room joining
     socket.on('join-room', function(roomName) {
-        console.log(roomName);
-        var room = rooms[roomName];
-        if (room !== undefined && room.canJoin === true) {
-            var oldRoom = players[socket.id].room;
 
+        var newRm = rooms[roomName];
+
+        if(!rooms.hasOwnProperty(roomName)) {
+            // no such room
+            console.log('no such room');
+        } else if (!newRm.isOpen()) {
+            // room closed
+            console.log('room closed');
+        } else { // join the room
+            console.log('joining room');
+            var oldRmName = players[socket.id].room;
+
+            // Update player status
             socket.join(roomName);
-            socket.leave(oldRoom);
+            socket.leave(oldRmName);
             players[socket.id].setRoom(roomName);
-            
-            socket.emit('success', 'Welcome to ' + roomName, room);
-        } else {
-            socket.emit('room-error', 'Unable to join room. Either room doesn\'t exist or game has already started');
+
+            var msg = 'Welcome to \'' + roomName + '\''
+            socket.emit('rm-update-success', {msg: msg, room: newRm});
+        }
+    });
+
+    // Handle input validation
+    socket.on('validate', function(formName, val) {
+        console.log('validating')
+        switch (formName) {
+
+            case 'registration':
+                if (nicknames.indexOf(val) === -1) {
+                    socket.emit('form-accept');
+                } else {
+                    socket
+                        .emit('form-reject', 
+                              '\'' + val + '\' already in use');
+                }
+                break;
+
+            case 'create-room':
+                console.log('create room');
+                if (rooms.hasOwnProperty(val)) {
+                    socket
+                        .emit('form-reject', 
+                              '\'' + val + '\' already exists');
+                } else {
+                    socket.emit('form-accept');
+                }
+                break;
+
+            case 'join-room':
+                console.log('join room');
+                if (rooms.hasOwnProperty(val)) {
+                    socket.emit('form-accept');
+                } else {
+                    socket
+                        .emit('form-reject',
+                              '\'' + val + '\' does not exists');
+                }
+                break;
         }
     });
 

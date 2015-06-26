@@ -3,7 +3,7 @@ var players = require('./app.js')
 function Player(name, id) {
     this.setName(name);
     this.role = 'player';
-    this.room = id;
+    this.room = 'lobby';
 }
 
 Player.prototype.getName = function() {
