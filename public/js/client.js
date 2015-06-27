@@ -71,6 +71,7 @@ function afterReady() {
     $('#send-message').click(function(e) {
         console.log("clicking send")
         e.preventDefault();
+
         var msg = $('#message').val();
         sendMsg(msg, socket.id);
         receiveMsg(msg);
@@ -173,12 +174,12 @@ function sendMsg(msg, id) {
 // HELPER
 function receiveMsg(msg, sender) {
     console.log('from others')
-    $('#messages').append("<li>" + sender + ": " + msg);
+    $('.message-history').append("<li>" + sender + ": " + msg);
 }
 
 function receiveMsg(msg) {
     console.log('from yourself')
-    $('#messages').append("<li>you: " + msg);    
+    $('.message-history').append("<li>you: " + msg);    
 }
 
 // Init 
