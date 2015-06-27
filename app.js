@@ -7,7 +7,6 @@ var Player = require('./player.js');
 
 // CONFIGURATION
 app.use(express.static(__dirname + '/public'));
-app.use('/vendor', express.static(__dirname + '/vendor'));
 
 app.get('/', function(req, res) {
     res.sendFile('index.html');
