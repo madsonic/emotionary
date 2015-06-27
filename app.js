@@ -173,10 +173,12 @@ io.on('connection', function(socket) {
     });
 
     // handle message transfer
-    socket.on('message', function(msg, id) {
+    socket.on('message', function(msg) {
+        console.log('message');
         var data = {
-            'msg': msg, 
-            'id': id
+            msg: msg, 
+            id: socket.id,
+            name: players[socket.id].getName(),
         }
         socket.broadcast.emit('message', data);
     });
