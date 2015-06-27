@@ -68,20 +68,27 @@ function afterReady() {
     });
 
     // Send message event handler
+
     $('#send-message').click(function(e) {
         console.log("clicking send")
         e.preventDefault();
-        var msg = $('#message').val();
-        sendMsg(msg, socket.id);
-        receiveMsg(msg);
-        $('#message').val('');
+
+        var msg = $('#message').val().trim();
+
+        if (msg !== '') {
+            console.log(msg);
+            sendMsg(msg);
+            receiveMsg({msg: msg});
+            $('#message').val('');
+        }
     });
 }
 
 // SOCKET EVENT LISTENERS
 
 socket.on('message', function(data) {
-    receiveMsg(data.msg, data.id);
+    console.log('receiving msg');
+    receiveMsg(data);
 });
 
 socket.on('rm-update-success', function(data) {
@@ -166,19 +173,20 @@ function checkInput(formName, val) {
     socket.emit('validate', formName, val);
 }
 
-function sendMsg(msg, id) {
-    socket.emit('message', msg, id);
+function sendMsg(msg) {
+    socket.emit('message', msg);
 }
 
 // HELPER
-function receiveMsg(msg, sender) {
-    console.log('from others')
-    $('#messages').append("<li>" + sender + ": " + msg);
-}
-
-function receiveMsg(msg) {
-    console.log('from yourself')
-    $('#messages').append("<li>you: " + msg);    
+function receiveMsg(data) {
+    console.log('receive msg fn');
+    if (data.id !== socket.id && data.id !== undefined) {
+        console.log('from others')
+        $('.message-history').append("<li>" + data.name + ": " + data.msg);
+    } else {
+        console.log('from yourself')
+        $('.message-history').append("<li>you: " + data.msg);
+    }
 }
 
 // Init 
