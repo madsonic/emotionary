@@ -64,7 +64,7 @@ function afterReady() {
 
             checkInput($form.attr('id'), $self.val());
 
-        }, 500);
+        }, 250);
     });
 
     // Send message event handler
