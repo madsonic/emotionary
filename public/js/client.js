@@ -113,7 +113,7 @@ socket.on('rm-update-success', function(data) {
     console.log('success');
 
     $('.modal').modal('hide');
-    $('.message-history').append("<li class='announcement'>" + data.msg);
+    announce(data.msg);
     $('#rm-name').text(data.room.name);    
 });
 
@@ -171,62 +171,21 @@ socket.on('form-validate-result', function(result, msg) {
     }
 });
 
-
-// socket.on('form-accept', function() {
-//     console.log('form ok')
-//     var $form = $('.modal form');
-
-//     // Input box visuals
-//     var $formGroup = $form.find('.form-group');
-//     var $icon = $form.find('.glyphicon.form-control-feedback');
-//     $formGroup
-//         .removeClass('has-error')
-//         .removeClass('has-success')
-//         .addClass('has-success');
-
-//     $icon
-//         .removeClass('glyphicon-remove')
-//         .removeClass('glyphicon-ok')
-//         .addClass('glyphicon-ok');
-
-//     // Remove any alert message
-//     $form.find('.alert').remove();
-
-//     // Enable submit button
-//     $form.find('button[type="submit"]').prop('disabled', false);
-// });
-
-// socket.on('form-reject', function(errMsg) {
-//     console.log('form not ok')
-//     var $form = $('.modal form');
-
-//     // Input box visuals
-//     var $formGroup = $form.find('.form-group');
-//     var $icon = $form.find('.glyphicon.form-control-feedback');
-    
-//     $form.find('.form-group')
-//         .removeClass('has-success')
-//         .removeClass('has-error')
-//         .addClass('has-error');
-
-//     $form.find('.glyphicon')
-//         .removeClass('glyphicon-ok')
-//         .removeClass('glyphicon-remove')
-//         .addClass('glyphicon-remove');
-
-//     // Add/replace alert message
-//     var $alert = $form.find('.alert');
-//     var m = "<div class='alert alert-danger'>" + errMsg + "</div>";
-    
-//     if ($alert.length === 0) { // New error
-//         $form.find('.form-group').after(m);
-//     } else { // Recurring error
-//         $alert.html(errMsg);
-//     }
-
-//     // Disable submit button
-//     $form.find('button[type="submit"]').prop('disabled', true);
-// });
+socket.on('role-change', function(gameMasterID) {
+    if (socket.id === gameMasterID) {
+        console.log('role to gm');
+        var markup = 
+            "<ul class='sidebar-nav gm'>" +
+                "<li><a href='#'>Start Game</a></li>" +
+                "<li><a href='#'>Change game master</a></li>" +
+            "</ul>";
+        
+        $('.sidebar-nav').after(markup);
+    } else {
+        console.log('role to player');
+        $('.sidebar-nav.gm').remove();
+    }
+});
 
 // SOCKET EVENT EMITTERS
 
@@ -261,6 +220,10 @@ function receiveMsg(data) {
         console.log('from yourself')
         $('.message-history').append("<li>you: " + data.msg);
     }
+}
+
+function announce(msg) {
+    $('.message-history').append("<li class='announcement'>" + msg);
 }
 
 // Init 

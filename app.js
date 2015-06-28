@@ -108,6 +108,7 @@ io.on('connection', function(socket) {
                             msg: '\"' + roomName + '\" successfully created.', 
                             room: newRoom
                         });
+            io.emit('role-change', socket.id);
         }
     });
 
