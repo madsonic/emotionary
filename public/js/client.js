@@ -180,6 +180,7 @@ function sendMsg(msg) {
 // HELPER
 function receiveMsg(data) {
     console.log('receive msg fn');
+
     if (data.id !== socket.id && data.id !== undefined) {
         console.log('from others')
         $('.message-history').append("<li>" + data.name + ": " + data.msg);
