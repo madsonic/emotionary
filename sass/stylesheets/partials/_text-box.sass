@@ -3,15 +3,15 @@
 .text-box
   position: fixed
   bottom: 0
-  width: 100%
+  width: $pg-content-width
   padding: $text-box-padding
   background: #e6e6e6
   
   div:last-child
-    @include no-lr-padding
+    @extend %no-lr-padding
 
   [class*="col-"]
-    @include no-left-padding
+    @extend %no-left-padding
 
   #message:focus
     outline: none

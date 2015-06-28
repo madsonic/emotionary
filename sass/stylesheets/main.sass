@@ -1,17 +1,23 @@
 // Bootstrap sass sheets
 @import "vendor/bootstrap"
 
+/*!
+ *   Custom style
+ */
+ 
 // Variable and mixins
 @import "variables"
-@import "mixins"
+@import "helper"
+
 
 // Scafolding
 
 .container-fluid
-  @include no-lr-padding
+  @extend %no-lr-padding
 
 // Body components
 
-@import "partials/navbar"
+// @import "partials/navbar"
+@import "partials/side-bar"
 @import "partials/text-box"
 @import "partials/messages"
