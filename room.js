@@ -1,18 +1,10 @@
-/*
-room - object with
--name
--access
--password
--people
--chatHistory
-*/
-
-function Room(name, access, password) {
+function Room(name, public, password) {
     this.name = name;
-    this.access = access === undefined ? true : acesss;
-    this.password = password === undefined ? '' : password;
-    this.people = [];
+    this.public = public || true;
+    this.password = password || null;
     this.chatHistory = [];
+    this.game = null;
+    this.gameStarted = false;
 }
 
 Room.prototype.getName = function() {
@@ -29,9 +21,29 @@ Room.prototype.setName = function(name) {
     }
 };
 
-Room.prototype.isOpen = function() {
-    return this.access;
+Room.prototype.isOpen = function(pwd) {
+    if (this.gameStarted) {
+        return false;
+    } else if (this.public) {
+        return true;
+    } else { // private game requires password
+        return pwd === this.password;
+    }
 };
+
+Room.prototype.startGame = function(game) {
+    this.gameStarted = true;
+    this.game = game;
+}
+
+Room.prototype.endGame = function() {
+    this.gameStarted = false;
+    this.game = null;
+}
+
+Room.prototype.isPlaying = function() {
+    return this.gameStarted;
+}
 
 Room.prototype.getChatHistory = function() {
     return this.chatHistory;

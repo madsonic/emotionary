@@ -60,12 +60,18 @@ function afterReady() {
         } else if (id === 'join-room') {
             console.log('emit join room event');
             joinRoom(val);
+        } else if (id === 'make-game') {
+            console.log('making game');
+            var valArr = $input.map(function() {
+                return $(this).val();
+            }).get();
+            makeGame(valArr);
         }
     });
 
     // Validation visuals based on keystroke
     var waiting;
-    $('.modal').on('keypress', 'form input', function(e) {
+    $('.modal').on('keypress', 'form .has-feedback input', function(e) {
         var code = e.keyCode || e.which;
         console.log(code);
         
@@ -104,6 +110,10 @@ function afterReady() {
 
 // SOCKET EVENT LISTENERS
 
+////////////////////
+//     Updates    //
+////////////////////
+
 socket.on('message', function(data) {
     console.log('receiving msg');
     receiveMsg(data);
@@ -113,9 +123,33 @@ socket.on('rm-update-success', function(data) {
     console.log('success');
 
     $('.modal').modal('hide');
-    announce(data.msg);
+    appendMsg(data.msg);
     $('#rm-name').text(data.room.name);    
 });
+
+socket.on('role-change', function(gameMasterID) {
+    if (socket.id === gameMasterID) {
+        console.log('role to gm');
+        var markup = 
+            "<ul class='sidebar-nav gm'>" +
+                "<li>"  +
+                    "<a href='views/make-game.html' data-toggle='modal' data-target='.modal'>Start Game</a>"+
+                "</li>" +
+                "<li>"  +
+                    "<a href='#' data-toggle='modal' data-target='.modal'>Change game master</a>"+
+                "</li>" +
+            "</ul>";
+        
+        $('.sidebar-nav').after(markup);
+    } else {
+        console.log('role to player');
+        $('.sidebar-nav.gm').remove();
+    }
+});
+
+////////////////////
+//   Form Stuff   //
+////////////////////
 
 socket.on('form-validate-result', function(result, msg) {
     var $form = $('.modal form');
@@ -171,20 +205,28 @@ socket.on('form-validate-result', function(result, msg) {
     }
 });
 
-socket.on('role-change', function(gameMasterID) {
-    if (socket.id === gameMasterID) {
-        console.log('role to gm');
-        var markup = 
-            "<ul class='sidebar-nav gm'>" +
-                "<li><a href='#'>Start Game</a></li>" +
-                "<li><a href='#'>Change game master</a></li>" +
-            "</ul>";
-        
-        $('.sidebar-nav').after(markup);
-    } else {
-        console.log('role to player');
-        $('.sidebar-nav.gm').remove();
+////////////////////
+//   Game Stuff   //
+////////////////////
+
+socket.on('start-game', function(data) {
+    $('.modal').modal('hide');
+    appendMsg('Game has started!');
+    appendMsg(data.qns);
+    appendMsg(data.cat);
+});
+
+socket.on('correct-ans', function(responder) {
+    appendMsg(responder.name + " guessed the right answer!");
+    appendMsg("The answer was: " + responder.msg);
+
+    if (responder.id !== socket.id) {
+        appendMsg("Awwww.....");
     }
+});
+
+socket.on('wrong-ans', function() {
+    appendMsg("Wrong answer. Try again!");
 });
 
 // SOCKET EVENT EMITTERS
@@ -209,6 +251,10 @@ function sendMsg(msg) {
     socket.emit('message', msg);
 }
 
+function makeGame(valArr) {
+    socket.emit('make-game', valArr);
+}
+
 // HELPER
 function receiveMsg(data) {
     console.log('receive msg fn');
@@ -222,7 +268,7 @@ function receiveMsg(data) {
     }
 }
 
-function announce(msg) {
+function appendMsg(msg) {
     $('.message-history').append("<li class='announcement'>" + msg);
 }
 

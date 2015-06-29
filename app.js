@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Room = require('./room.js');
 var Player = require('./player.js');
+var Game = require('./game.js');
 
 // CONFIGURATION
 app.use(express.static(__dirname + '/public'));
@@ -13,43 +14,29 @@ app.get('/', function(req, res) {
 });
 
 /*
-rooms - object with room (object)
-1. room
-
-room - object with
--name
--access
--password
--players
--chatHistory
-
-players - objects with 
--name
--role
--room
-
+    name: str
+    public: bool
+    password: str
+    people: arr
+    chatHistory: arr
+    gameStarted: bool
+    game: game obj;
 */
-var rooms = {
-    'lobby': { 
-        name: 'lobby',
-        access: true,
-        password: '',
-        players: [],
-        chatHistory: []
-    }
-};
+var default_lobby = new Room('lobby', true);
+var rooms = { 'lobby': default_lobby };
 
-var players = {
-    'socketid': {
-        name: 'bot',
-        role: 'admin',
-        room: 'lobby'
-    }
-};
+/*
+    name: str
+    role: str ('admin' | 'player')
+    room: str
+*/
+var test_player = new Player('bot', 'lobby');
+var players = { 'socketid': test_player };
 
 var nicknames = ['bot'];
 
 module.exports.players = players;
+module.exports.rooms = rooms;
 
 io.on('connection', function(socket) {
     console.log('a user connected');
@@ -61,12 +48,12 @@ io.on('connection', function(socket) {
     socket.on('register', function(nickname) {
        console.log("server register: " + nickname + " " + socket.id);
  
-        var player = new Player(nickname, socket.id);
+        var player = new Player(nickname);
         players[socket.id] = player;
-
-        rooms.lobby.players.push(socket.id);
-
         nicknames.push(nickname);
+
+        socket.join('lobby');
+
         console.log(players);
         console.log(nicknames);
 
@@ -108,7 +95,7 @@ io.on('connection', function(socket) {
                             msg: '\"' + roomName + '\" successfully created.', 
                             room: newRoom
                         });
-            io.emit('role-change', socket.id);
+            io.to(roomName).emit('role-change', socket.id);
         }
     });
 
@@ -180,15 +167,61 @@ io.on('connection', function(socket) {
         }
     });
 
-    // handle message transfer
+    // Handle message transfer
+    // If game is not in progress, everyone is in chat mode
+    // If there is a ongoing game, all players will be in answer mode
+    // and only the game master is in chat mode
     socket.on('message', function(msg) {
-        console.log('message');
+        // Check if it is a chat message or a game answer
+        var sender = players[socket.id];
+        var senderName = sender.getName();
+        var rmName = sender.getRoom();
+        console.log(rmName);
+        var rm = rooms[rmName];
         var data = {
-            msg: msg, 
             id: socket.id,
-            name: players[socket.id].getName(),
+            name: senderName,
+            msg: msg
         }
-        socket.broadcast.emit('message', data);
+
+        if (rm.isPlaying() && sender.getRole() === 'player') {
+            console.log('checking ans');
+            // message as ans
+            if (rm.game.checkAns(msg)) {
+                // End game
+                // Add to player score
+                console.log('Correct!');
+                io.to(rmName).emit('correct-ans', data);
+                rm.endGame();
+                console.log(rooms[rmName]);
+            } else {
+                // Do nothing 
+                console.log('Wrong. Try again');
+                socket.broadcast.to(rmName).emit('message', data);
+                socket.emit('wrong-ans');
+            }
+        } else {
+            // normal chat messages
+            console.log('chat messages');
+            socket.broadcast.to(rmName).emit('message', data);
+        }
+    });
+
+    // Handle game making
+    socket.on('make-game', function(valArr) {
+        console.log(valArr);
+        var game = new Game(valArr[0], valArr[1], valArr[2]);
+        var rmName = players[socket.id].room;
+
+        // Update room game status
+        rooms[rmName].startGame(game);
+
+        var data = {
+            gm: socket.id,
+            qns: game.qns,
+            cat: game.category,
+        }
+        io.to(rmName).emit('start-game', data);
     });
 });
 
