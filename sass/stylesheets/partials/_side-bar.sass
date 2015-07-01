@@ -1,0 +1,88 @@
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Converted to sass by @madsonic
+ * Adapted from Start Bootstrap
+ */
+
+/* Toggle Styles */
+
+#wrapper
+  padding-left: $sb-width
+  -webkit-transition: all 0.5s ease
+  -moz-transition: all 0.5s ease
+  -o-transition: all 0.5s ease
+  transition: all 0.5s ease
+
+  &.collapsed
+    padding-left: $collapsed-sb-width
+
+  &.collapsed #sidebar-wrapper
+    width: $collapsed-sb-width
+
+  &.collapsed #page-content-wrapper
+    position: relative
+    // margin-right: -250px
+
+#sidebar-wrapper
+  z-index: 1000
+  position: fixed
+  left: 0
+  width: $sb-width
+  height: 100%
+  overflow-y: auto
+  background: $sb-bg-color
+  -webkit-transition: all 0.5s ease
+  -moz-transition: all 0.5s ease
+  -o-transition: all 0.5s ease
+  transition: all 0.5s ease
+
+#page-content-wrapper
+  position: relative
+
+/* Sidebar Styles */
+
+.sidebar-nav
+  position: relative
+  top: 0
+  width: 100%
+  margin: 0
+  padding: 0
+  list-style: none
+
+  li
+    text-indent: 20px
+    line-height: 40px
+
+    a
+      display: block
+      text-decoration: none
+      color: $sb-text-color
+
+      &:hover
+        @extend %nav-item-hover
+
+      &:active,
+      &:focus
+        text-decoration: none
+        outline: none
+
+  > .sidebar-brand
+    height: 65px
+    font-size: 18px
+    line-height: 60px
+
+    a
+      color: $sb-text-color
+
+      &:hover
+        @extend %navbrand-hover
+  &.gm
+    li a
+      color: $gamemaster-text-color
+      background-color: $gamemaster-bg-color
+
+      &:hover
+        @extend %gm-hover

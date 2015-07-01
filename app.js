@@ -90,15 +90,18 @@ io.on('connection', function(socket) {
             var newRoom = new Room(roomName);
             var oldRoom = players[socket.id].getRoom();
 
-            // Update player status
+            // Update player status.
+            // Room creators are game master by default
             socket.join(roomName);
             socket.leave(oldRoom);
             players[socket.id].setRoom(roomName);
+            players[socket.id].setRole('gm');
 
             // Update room list
             rooms[roomName] = newRoom;
 
             console.log(rooms);
+            console.log(players[socket.id]);
 
             socket.emit('rm-update-success', 
                         {
@@ -112,6 +115,7 @@ io.on('connection', function(socket) {
     socket.on('join-room', function(roomName) {
 
         var newRm = rooms[roomName];
+        var player = players[socket.id];
 
         if(!rooms.hasOwnProperty(roomName)) {
             // no such room
@@ -126,8 +130,11 @@ io.on('connection', function(socket) {
             // Update player status
             socket.join(roomName);
             socket.leave(oldRmName);
-            players[socket.id].setRoom(roomName);
+            player.setRoom(roomName);
 
+            if (player.getRole() === 'gm') { player.setRole('player'); }
+
+            console.log(player);
             var msg = 'Welcome to \'' + roomName + '\''
             socket.emit('rm-update-success', {msg: msg, room: newRm});
         }
@@ -140,10 +147,10 @@ io.on('connection', function(socket) {
 
             case 'registration':
                 if (nicknames.indexOf(val) === -1) {
-                    socket.emit('form-accept');
+                    socket.emit('form-validate-result', true);
                 } else {
                     socket
-                        .emit('form-reject', 
+                        .emit('form-validate-result', false,
                               '\'' + val + '\' already in use');
                 }
                 break;
@@ -152,20 +159,20 @@ io.on('connection', function(socket) {
                 console.log('create room');
                 if (rooms.hasOwnProperty(val)) {
                     socket
-                        .emit('form-reject', 
+                        .emit('form-validate-result', false,
                               '\'' + val + '\' already exists');
                 } else {
-                    socket.emit('form-accept');
+                    socket.emit('form-validate-result', true);
                 }
                 break;
 
             case 'join-room':
                 console.log('join room');
                 if (rooms.hasOwnProperty(val)) {
-                    socket.emit('form-accept');
+                    socket.emit('form-validate-result', true);
                 } else {
                     socket
-                        .emit('form-reject',
+                        .emit('form-validate-result', false,
                               '\'' + val + '\' does not exists');
                 }
                 break;

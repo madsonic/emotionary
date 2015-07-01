@@ -1,0 +1,25 @@
+// mixins
+
+// General
+%no-left-padding
+  padding-left: 0
+
+%no-right-padding
+  padding-right: 0
+
+%no-lr-padding
+  @extend %no-left-padding
+  @extend %no-right-padding
+
+// sidebar
+%navbrand-hover
+  text-decoration: none
+  color: $sb-text-hover-color
+
+%nav-item-hover
+  @extend %navbrand-hover
+  background: rgba(255,255,255,0.2)
+
+%gm-hover
+  text-decoration: none
+  background-color: $gamemaster-bg-hover-color

@@ -7,6 +7,7 @@
 
     <title>chat tutorial</title>
     
+    <!-- <link rel="stylesheet" type="text/css" href="css/stylesheets/simple-sidebar.css" />     -->
     <link rel="stylesheet" type="text/css" href="css/stylesheets/main.css" />
     
     <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
@@ -15,59 +16,69 @@
 
   <body>
 
+    <div id="wrapper">
+
+        <!-- Side Bar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="views/register.html" class="text-capitalize" data-toggle="modal" data-target=".modal">Quiz Bomb</a>
+                </li>
+                <li>
+                    <a id="rm-name">Lobby</a>
+                </li>
+                <li>
+                    <a href="views/create-room.html" data-toggle="modal" data-target=".modal" data-backdrop="true">Create Room</a>
+                </li>
+                <li>
+                    <a href="views/join-room.html" data-toggle="modal" data-target=".modal" data-backdrop="true">Join Room</a>
+                </li>
+            </ul>
+
+            <ul class="sidebar-nav gm">
+                <li><a href="#">Set Question</a></li>
+                <li><a href="#">Start Game</a></li>
+                <li><a href="#">Set Question</a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div id="page-content-wrapper">
+            
+            <div class="container-fluid">
+
+                <!-- message history -->
+                <ul class="message-history"></ul>
+
+                <div class="row">
+                    <form class="col-xs-12" role="text-box">
+                        <div class="text-box">
+                            <div class="col-xs-11">
+                                <input class="form-control" id="message" type="text"  autocomplete="off">
+                            </div>
+                            <div class="col-xs-1">
+                                <button class="btn btn-success" id="send-message">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div> 
+        <!-- Main content -->
+        
+    </div>
+
+ 
+
     <!-- Common modal for all links -->
-    <div class="modal fade" role="dialog">
+    <div class="modal fade">
         <div class="modal-dialog">
             
             <!-- Modal content -->
             <div class="modal-content"></div>
 
         </div>
-    </div>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-
-            <div class="navbar-header">
-                <!-- Modal trigger -->
-                <a href="views/register.html" class="navbar-brand text-capitalize" data-toggle="modal" data-target=".modal">Quiz Bomb</a>
-            </div>
-
-            <div class="navbar-collapse collapse navbar-right">
-                <ul class="nav navbar-nav">
-                    <li><a id="rm-name">Lobby</a></li>
-                    <!-- Modal triggers -->
-                    <li>
-                        <a href="views/create-room.html" data-toggle="modal" data-target=".modal">Create Room</a>
-                    </li>
-                    <li>
-                        <a href="views/join-room.html" data-toggle="modal" data-target=".modal">Join Room</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </nav>
-
- 
-    <div class="main-container-fluid container-fluid">
-
-        <!-- message history -->
-        <ul class="message-history"></ul>
-
-        <div class="row">
-            <form class="col-xs-12" role="text-box">
-                <div class="text-box">
-                    <div class="col-xs-11">
-                        <input class="form-control" id="message" type="text"  autocomplete="off" autofocus>
-                    </div>
-                    <div class="col-xs-1">
-                        <button class="btn btn-success" id="send-message">Send</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
     </div>
 
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
