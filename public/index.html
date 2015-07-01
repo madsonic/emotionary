@@ -28,10 +28,10 @@
                     <a id="rm-name">Lobby</a>
                 </li>
                 <li>
-                    <a href="views/create-room.html" data-toggle="modal" data-target=".modal">Create Room</a>
+                    <a href="views/create-room.html" data-toggle="modal" data-target=".modal" data-backdrop="true">Create Room</a>
                 </li>
                 <li>
-                    <a href="views/join-room.html" data-toggle="modal" data-target=".modal">Join Room</a>
+                    <a href="views/join-room.html" data-toggle="modal" data-target=".modal" data-backdrop="true">Join Room</a>
                 </li>
             </ul>
 
@@ -54,7 +54,7 @@
                     <form class="col-xs-12" role="text-box">
                         <div class="text-box">
                             <div class="col-xs-11">
-                                <input class="form-control" id="message" type="text"  autocomplete="off" autofocus>
+                                <input class="form-control" id="message" type="text"  autocomplete="off">
                             </div>
                             <div class="col-xs-1">
                                 <button class="btn btn-success" id="send-message">Send</button>
@@ -72,7 +72,7 @@
  
 
     <!-- Common modal for all links -->
-    <div class="modal fade" role="dialog">
+    <div class="modal fade">
         <div class="modal-dialog">
             
             <!-- Modal content -->

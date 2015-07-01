@@ -6,6 +6,7 @@ var socket = io();
 function afterReady() {
     // Loads registration modal on ready
     $('.modal-content').load('views/register.html', function() {
+        // show modal and make it permanent until submitted
         $('.modal').modal({
             show: true,
             backdrop: 'static',
@@ -15,8 +16,8 @@ function afterReady() {
 
     // Insert content dynamically so that a common modal can be used
     $('.modal').on('show.bs.modal', function(e) {
+        
         var dir = $(e.relatedTarget).attr('href');
-
         // insert content for modals called via click
         if (dir !== undefined) {
             var $modal = $(this);
@@ -27,7 +28,17 @@ function afterReady() {
 
             // load new content
             $('.modal-content').load(dir);
+
+            // redfines options
+            $modal.data('bs.modal').options.backdrop = "true";
+            $modal.data('bs.modal').options.keyboard = "true";
         }
+    }).on('shown.bs.modal', function() {
+        // focus modal input
+        $(this).find('input').focus();
+    }).on('hidden.bs.modal', function() {
+        // focus message input
+        $('#message').focus();
     });
 
     // User registration handler
