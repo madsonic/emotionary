@@ -54,17 +54,24 @@ function afterReady() {
 
     // Validation visuals based on keystroke
     var waiting;
-    $('.modal').on('keyup', 'form input', function() {
-        var $form = $('.modal form');
-        var $self = $(this);
+    $('.modal').on('keypress', 'form input', function(e) {
+        var code = e.keyCode || e.which;
+        console.log(code);
+        
+        if (code === 13) { // Enter key
+            return;
+        } else {
+            var $form = $('.modal form');
+            var $self = $(this);
 
-        // Wait for user to 'finish' typing
-        clearTimeout(waiting);
-        waiting = setTimeout(function() {
+            // Wait for user to 'finish' typing
+            clearTimeout(waiting);
+            waiting = setTimeout(function() {
 
-            checkInput($form.attr('id'), $self.val());
+                checkInput($form.attr('id'), $self.val());
 
-        }, 250);
+            }, 250);
+        }
     });
 
     // Send message event handler
@@ -99,61 +106,116 @@ socket.on('rm-update-success', function(data) {
     $('#rm-name').text(data.room.name);    
 });
 
-socket.on('form-accept', function() {
-    console.log('form ok')
+socket.on('form-validate-result', function(result, msg) {
     var $form = $('.modal form');
-
-    // Input box visuals
     var $formGroup = $form.find('.form-group');
-    var $icon = $form.find('.glyphicon');
-    $formGroup
-        .removeClass('has-error')
-        .removeClass('has-success')
-        .addClass('has-success');
-
-    $icon
-        .removeClass('glyphicon-remove')
-        .removeClass('glyphicon-ok')
-        .addClass('glyphicon-ok');
-
-    // Remove any alert message
-    $form.find('.alert').remove();
-
-    // Enable submit button
-    $form.find('button[type="submit"]').prop('disabled', false);
-});
-
-socket.on('form-reject', function(errMsg) {
-    console.log('form not ok')
-    var $form = $('.modal form');
-
-    // Input box visuals
-    var $formGroup = $form.find('.form-group');
-    var $icon = $form.find('.glyphicon');
-    
-    $form.find('.form-group')
-        .removeClass('has-success')
-        .removeClass('has-error')
-        .addClass('has-error');
-
-    $form.find('.glyphicon')
-        .removeClass('glyphicon-ok')
-        .removeClass('glyphicon-remove')
-        .addClass('glyphicon-remove');
-
-    // Add/replace alert message
+    var $icon = $form.find('.glyphicon.form-control-feedback');
     var $alert = $form.find('.alert');
-    var m = "<div class='alert alert-danger'>" + errMsg + "</div>";
-    
-    if ($alert.length === 0) { // New error
-        $form.find('.form-group').after(m);
-    } else { // Recurring error
-        $alert.html(errMsg);
-    }
+    var $button = $form.find('button[type="submit"]');
 
-    // Disable submit button
-    $form.find('button[type="submit"]').prop('disabled', true);
+    if (result) {
+        console.log('form ok')
+
+        // Input box visuals
+        $formGroup
+            .removeClass('has-error')
+            .removeClass('has-success')
+            .addClass('has-success');
+
+        $icon
+            .removeClass('glyphicon-remove')
+            .removeClass('glyphicon-ok')
+            .addClass('glyphicon-ok');
+
+        // Remove any alert message
+        $alert.remove();
+
+        // Enable submit button
+        $button.prop('disabled', false);
+    } else {
+        console.log('form not ok')
+
+        // Input box visuals        
+        $formGroup
+            .removeClass('has-success')
+            .removeClass('has-error')
+            .addClass('has-error');
+
+        $icon
+            .removeClass('glyphicon-ok')
+            .removeClass('glyphicon-remove')
+            .addClass('glyphicon-remove');
+
+        // Add/replace alert message
+        var m = "<div class='alert alert-danger'>" + msg + "</div>";
+        
+        if ($alert.length === 0) { // New error
+            $form.find('.form-group').after(m);
+        } else { // Recurring error
+            $alert.html(msg);
+        }
+
+        // Disable submit button
+        $button.prop('disabled', true);
+    }
 });
+
+
+// socket.on('form-accept', function() {
+//     console.log('form ok')
+//     var $form = $('.modal form');
+
+//     // Input box visuals
+//     var $formGroup = $form.find('.form-group');
+//     var $icon = $form.find('.glyphicon.form-control-feedback');
+//     $formGroup
+//         .removeClass('has-error')
+//         .removeClass('has-success')
+//         .addClass('has-success');
+
+//     $icon
+//         .removeClass('glyphicon-remove')
+//         .removeClass('glyphicon-ok')
+//         .addClass('glyphicon-ok');
+
+//     // Remove any alert message
+//     $form.find('.alert').remove();
+
+//     // Enable submit button
+//     $form.find('button[type="submit"]').prop('disabled', false);
+// });
+
+// socket.on('form-reject', function(errMsg) {
+//     console.log('form not ok')
+//     var $form = $('.modal form');
+
+//     // Input box visuals
+//     var $formGroup = $form.find('.form-group');
+//     var $icon = $form.find('.glyphicon.form-control-feedback');
+    
+//     $form.find('.form-group')
+//         .removeClass('has-success')
+//         .removeClass('has-error')
+//         .addClass('has-error');
+
+//     $form.find('.glyphicon')
+//         .removeClass('glyphicon-ok')
+//         .removeClass('glyphicon-remove')
+//         .addClass('glyphicon-remove');
+
+//     // Add/replace alert message
+//     var $alert = $form.find('.alert');
+//     var m = "<div class='alert alert-danger'>" + errMsg + "</div>";
+    
+//     if ($alert.length === 0) { // New error
+//         $form.find('.form-group').after(m);
+//     } else { // Recurring error
+//         $alert.html(errMsg);
+//     }
+
+//     // Disable submit button
+//     $form.find('button[type="submit"]').prop('disabled', true);
+// });
 
 // SOCKET EVENT EMITTERS
 

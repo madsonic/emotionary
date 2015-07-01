@@ -147,10 +147,10 @@ io.on('connection', function(socket) {
 
             case 'registration':
                 if (nicknames.indexOf(val) === -1) {
-                    socket.emit('form-accept');
+                    socket.emit('form-validate-result', true);
                 } else {
                     socket
-                        .emit('form-reject', 
+                        .emit('form-validate-result', false,
                               '\'' + val + '\' already in use');
                 }
                 break;
@@ -159,20 +159,20 @@ io.on('connection', function(socket) {
                 console.log('create room');
                 if (rooms.hasOwnProperty(val)) {
                     socket
-                        .emit('form-reject', 
+                        .emit('form-validate-result', false,
                               '\'' + val + '\' already exists');
                 } else {
-                    socket.emit('form-accept');
+                    socket.emit('form-validate-result', true);
                 }
                 break;
 
             case 'join-room':
                 console.log('join room');
                 if (rooms.hasOwnProperty(val)) {
-                    socket.emit('form-accept');
+                    socket.emit('form-validate-result', true);
                 } else {
                     socket
-                        .emit('form-reject',
+                        .emit('form-validate-result', false,
                               '\'' + val + '\' does not exists');
                 }
                 break;
