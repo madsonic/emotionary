@@ -91,6 +91,12 @@ function afterReady() {
         }
     });
 
+    // Sidebar btn
+    $('a[href="#sidebar-link"]').click(function(e) {
+        e.preventDefault();
+        $('#wrapper').toggleClass('sidebar-active');
+    });
+
     // Send message event handler
 
     $('#send-message').click(function(e) {
@@ -134,9 +140,6 @@ socket.on('role-change', function(gameMasterID) {
             "<ul class='sidebar-nav gm'>" +
                 "<li>"  +
                     "<a href='views/make-game.html' data-toggle='modal' data-target='.modal'>Start Game</a>"+
-                "</li>" +
-                "<li>"  +
-                    "<a href='#' data-toggle='modal' data-target='.modal'>Change game master</a>"+
                 "</li>" +
             "</ul>";
         

@@ -7,40 +7,60 @@
  * Adapted from Start Bootstrap
  */
 
-/* Toggle Styles */
+#wrapper, #sidebar-wrapper, #sidebar-link
+  @extend %responsive-slide
+
+#sidebar-link
+  position: fixed
+  top: 0
+  left: 0
+  display: block
+  background: rgba($sb-bg-color, 0.7)
+  z-index: 10
+
+  .btn
+    padding: 12px
+    border-radius: 0
+
+  .burger
+    display: block
+    width: 22px
+    height: 1px
+    background-color: $white    
+
+  .burger + .burger
+    margin-top: 4px
 
 #wrapper
-  padding-left: $sb-width
-  -webkit-transition: all 0.5s ease
-  -moz-transition: all 0.5s ease
-  -o-transition: all 0.5s ease
-  transition: all 0.5s ease
+  padding-left: $collapsed-sb-width
+  // toggled with button
+  &.sidebar-active
+    padding-left: $sb-width
 
-  &.collapsed
-    padding-left: $collapsed-sb-width
+    #sidebar-wrapper, #sidebar-link
+      left: $sb-width
 
-  &.collapsed #sidebar-wrapper
-    width: $collapsed-sb-width
+  @media (min-width: $screen-sm-min)
+    padding-left: $sb-width
 
-  &.collapsed #page-content-wrapper
-    position: relative
-    // margin-right: -250px
+    #sidebar-wrapper
+      left: $sb-width
+
+    #sidebar-link
+      display: none
+
 
 #sidebar-wrapper
-  z-index: 1000
   position: fixed
-  left: 0
+  top: 0
+  bottom: 0
+  left: $collapsed-sb-width
   width: $sb-width
-  height: 100%
+  margin-left: -$sb-width
+  z-index: 1000
   overflow-y: auto
   background: $sb-bg-color
-  -webkit-transition: all 0.5s ease
-  -moz-transition: all 0.5s ease
-  -o-transition: all 0.5s ease
-  transition: all 0.5s ease
 
-#page-content-wrapper
-  position: relative
 
 /* Sidebar Styles */
 
@@ -53,7 +73,7 @@
   list-style: none
 
   li
-    text-indent: 20px
+    text-indent: 10px
     line-height: 40px
 
     a

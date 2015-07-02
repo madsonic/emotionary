@@ -2,19 +2,37 @@
 
 .text-box
   position: fixed
+  left: 0
+  right: 0
   bottom: 0
-  width: $pg-content-width
   padding: $text-box-padding
   background: #e6e6e6
-  
+  @extend %responsive-slide
+
+  .glyphicon
+    left: -4px
+
   div:last-child
     @extend %no-lr-padding
 
   [class*="col-"]
     @extend %no-left-padding
 
-  #message:focus
-    outline: none
+#wrapper
+  &.sidebar-active .text-box
+    left: $sb-width      
+
+  @media (min-width: $screen-sm-min)
+    .text-box
+      left: $sb-width
+
+#message:focus
+  border: none
+  border-color: none
+  box-shadow: none
+  -webkit-box-shadow: none
+  transition: none
+  -webkit-transition: none
 
 #send-message
   width: 100%
