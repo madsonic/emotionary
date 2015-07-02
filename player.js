@@ -1,23 +1,11 @@
-var players = require('./app.js')
-
-function Player(name, id) {
-    this.setName(name);
+function Player(name) {
+    this.name = name;
     this.role = 'player';
     this.room = 'lobby';
 }
 
 Player.prototype.getName = function() {
     return this.name;
-};
-
-Player.prototype.setName = function(name) {
-    if (players.hasOwnProperty(name)) {
-        console.log(name + " already exists");
-        // reprompt user
-    } else {
-        this.name = name;
-        // update global room list name
-    }
 };
 
 Player.prototype.getRole = function() {

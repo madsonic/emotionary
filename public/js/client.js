@@ -60,12 +60,18 @@ function afterReady() {
         } else if (id === 'join-room') {
             console.log('emit join room event');
             joinRoom(val);
+        } else if (id === 'make-game') {
+            console.log('making game');
+            var valArr = $input.map(function() {
+                return $(this).val();
+            }).get();
+            makeGame(valArr);
         }
     });
 
     // Validation visuals based on keystroke
     var waiting;
-    $('.modal').on('keypress', 'form input', function(e) {
+    $('.modal').on('keypress', 'form .has-feedback input', function(e) {
         var code = e.keyCode || e.which;
         console.log(code);
         
@@ -83,6 +89,12 @@ function afterReady() {
 
             }, 250);
         }
+    });
+
+    // Sidebar btn
+    $('a[href="#sidebar-link"]').click(function(e) {
+        e.preventDefault();
+        $('#wrapper').toggleClass('sidebar-active');
     });
 
     // Send message event handler
@@ -104,6 +116,10 @@ function afterReady() {
 
 // SOCKET EVENT LISTENERS
 
+////////////////////
+//     Updates    //
+////////////////////
+
 socket.on('message', function(data) {
     console.log('receiving msg');
     receiveMsg(data);
@@ -113,9 +129,30 @@ socket.on('rm-update-success', function(data) {
     console.log('success');
 
     $('.modal').modal('hide');
-    $('.message-history').append("<li class='announcement'>" + data.msg);
+    appendMsg(data.msg);
     $('#rm-name').text(data.room.name);    
 });
+
+socket.on('role-change', function(gameMasterID) {
+    if (socket.id === gameMasterID) {
+        console.log('role to gm');
+        var markup = 
+            "<ul class='sidebar-nav gm'>" +
+                "<li>"  +
+                    "<a href='views/make-game.html' data-toggle='modal' data-target='.modal'>Start Game</a>"+
+                "</li>" +
+            "</ul>";
+        
+        $('.sidebar-nav').after(markup);
+    } else {
+        console.log('role to player');
+        $('.sidebar-nav.gm').remove();
+    }
+});
+
+////////////////////
+//   Form Stuff   //
+////////////////////
 
 socket.on('form-validate-result', function(result, msg) {
     var $form = $('.modal form');
@@ -171,62 +208,29 @@ socket.on('form-validate-result', function(result, msg) {
     }
 });
 
+////////////////////
+//   Game Stuff   //
+////////////////////
 
-// socket.on('form-accept', function() {
-//     console.log('form ok')
-//     var $form = $('.modal form');
+socket.on('start-game', function(data) {
+    $('.modal').modal('hide');
+    appendMsg('Game has started!');
+    appendMsg(data.qns);
+    appendMsg(data.cat);
+});
 
-//     // Input box visuals
-//     var $formGroup = $form.find('.form-group');
-//     var $icon = $form.find('.glyphicon.form-control-feedback');
-//     $formGroup
-//         .removeClass('has-error')
-//         .removeClass('has-success')
-//         .addClass('has-success');
+socket.on('correct-ans', function(responder) {
+    appendMsg(responder.name + " guessed the right answer!");
+    appendMsg("The answer was: " + responder.msg);
 
-//     $icon
-//         .removeClass('glyphicon-remove')
-//         .removeClass('glyphicon-ok')
-//         .addClass('glyphicon-ok');
+    if (responder.id !== socket.id) {
+        appendMsg("Awwww.....");
+    }
+});
 
-//     // Remove any alert message
-//     $form.find('.alert').remove();
-
-//     // Enable submit button
-//     $form.find('button[type="submit"]').prop('disabled', false);
-// });
-
-// socket.on('form-reject', function(errMsg) {
-//     console.log('form not ok')
-//     var $form = $('.modal form');
-
-//     // Input box visuals
-//     var $formGroup = $form.find('.form-group');
-//     var $icon = $form.find('.glyphicon.form-control-feedback');
-    
-//     $form.find('.form-group')
-//         .removeClass('has-success')
-//         .removeClass('has-error')
-//         .addClass('has-error');
-
-//     $form.find('.glyphicon')
-//         .removeClass('glyphicon-ok')
-//         .removeClass('glyphicon-remove')
-//         .addClass('glyphicon-remove');
-
-//     // Add/replace alert message
-//     var $alert = $form.find('.alert');
-//     var m = "<div class='alert alert-danger'>" + errMsg + "</div>";
-    
-//     if ($alert.length === 0) { // New error
-//         $form.find('.form-group').after(m);
-//     } else { // Recurring error
-//         $alert.html(errMsg);
-//     }
-
-//     // Disable submit button
-//     $form.find('button[type="submit"]').prop('disabled', true);
-// });
+socket.on('wrong-ans', function() {
+    appendMsg("Wrong answer. Try again!");
+});
 
 // SOCKET EVENT EMITTERS
 
@@ -250,6 +254,10 @@ function sendMsg(msg) {
     socket.emit('message', msg);
 }
 
+function makeGame(valArr) {
+    socket.emit('make-game', valArr);
+}
+
 // HELPER
 function receiveMsg(data) {
     console.log('receive msg fn');
@@ -261,6 +269,10 @@ function receiveMsg(data) {
         console.log('from yourself')
         $('.message-history').append("<li>you: " + data.msg);
     }
+}
+
+function appendMsg(msg) {
+    $('.message-history').append("<li class='announcement'>" + msg);
 }
 
 // Init 
