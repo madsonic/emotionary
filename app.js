@@ -13,7 +13,7 @@ app.get('/', function(req, res) {
     res.sendFile('index.html');
 });
 
-/*
+/*  Room
     name: str
     public: bool
     password: str
@@ -25,12 +25,12 @@ app.get('/', function(req, res) {
 var default_lobby = new Room('lobby', true);
 var rooms = { 'lobby': default_lobby };
 
-/*
+/*  Player
     name: str
     role: str ('admin' | 'player')
     room: str
 */
-var test_player = new Player('bot', 'lobby');
+var test_player = new Player('bot');
 var players = { 'socketid': test_player };
 
 var nicknames = ['bot'];
@@ -43,6 +43,26 @@ io.on('connection', function(socket) {
     console.log('socket id: ' + socket.id);
 
     // EVENT HANDLERS
+
+    // Disconection of registered players
+    socket.on('disconnect', function() {
+        console.log(socket.id + ' has left the game');
+
+        if (players.hasOwnProperty(socket.id)) {
+            var name = players[socket.id].getName();
+            var i = nicknames.indexOf(name);
+
+            // Delete from nicknames
+            nicknames.splice(i, 1);
+
+            // Delete from players
+            delete players[socket.id];
+            console.log(players);
+            console.log(nicknames);
+
+            // Leave room - socket.io handles it
+        }
+    });
 
     // handle user registration
     socket.on('register', function(nickname) {
