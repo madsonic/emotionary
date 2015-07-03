@@ -1,7 +1,9 @@
+<link rel="stylesheet" href="readme.css">
+
 README
 ====================== 
 *(updated section for Evaluation ~~1~~2)*<br>
-<span class="change">*All highlighted text shows changed content. Alternatively view commit history on Github for changes</span>
+<span class="change">*All highlighted text shows changed content. Alternatively tags 'milestone1' and 'milestone2' on Github to compare changes</span>
 
 ### <a name="top"></a><span class>Content page</span>
 1. [Overview](#overview)
@@ -121,7 +123,7 @@ Technology:
 [Log][]
 
 <!-- links -->
-[game demo]: http://youtu.be/t_zq7qRYGJk
+[game demo]: http://youtu.be/l-rWHvoIWG4
 [prototype]: http://quizbomb.heroku.com
 [game link]: http://quizbomb.heroku.com
 [video]: http://youtu.be/HEGBts_DTzo
@@ -138,10 +140,3 @@ Technology:
 [Sass - CSS preprocessor]: http://sass-lang.com/
 
 [log]: https://docs.google.com/spreadsheets/d/1e2rd8M_KX9adLv5_JHVMh9-lTx8qztDOJhhcLJqUQAU/edit?usp=sharing
-
-<!-- Style -->
-<style>
-.change {
-    background-color: #fffbcc;
-}
-</style>
