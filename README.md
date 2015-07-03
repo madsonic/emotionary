@@ -114,6 +114,7 @@ Technology:
 * [jQuery event 2][]
 * [~~Popup.js~~][] <span class="change">(Replaced with bootstrap modal)</span>
 * [Bootstrap][]
+* [Sass - CSS preprocessor][]
 
 -------------------
 ### <a name="log"></a>Project Log [↑](#top)
@@ -134,6 +135,7 @@ Technology:
 [jQuery event 2]:http://www.mattlunn.me.uk/blog/2012/05/what-does-event-bubbling-mean/
 [~~popup.js~~]: http://docs.toddish.co.uk/popup/
 [Bootstrap]: http://getbootstrap.com/
+[Sass - CSS preprocessor]: http://sass-lang.com/
 
 [log]: https://docs.google.com/spreadsheets/d/1e2rd8M_KX9adLv5_JHVMh9-lTx8qztDOJhhcLJqUQAU/edit?usp=sharing
 
