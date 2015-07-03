@@ -139,6 +139,7 @@ Technology:
 
 <!-- Style -->
 <style>
-    .change {
+.change {
     background-color: #fffbcc;
+}
 </style>
