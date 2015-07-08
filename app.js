@@ -22,7 +22,7 @@ app.get('/', function(req, res) {
     gameStarted: bool
     game: game obj;
 */
-var default_lobby = new Room('lobby', true);
+var default_lobby = new Room('lobby');
 var rooms = { 'lobby': default_lobby };
 
 /*  Player
@@ -94,7 +94,7 @@ io.on('connection', function(socket) {
             socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
         } else {
             console.log('making room');
-            var newRoom = new Room(roomName);
+            var newRoom = new Room(roomName, socket.id);
             var oldRoom = players[socket.id].getRoom();
 
             // Update player status.
@@ -199,6 +199,7 @@ io.on('connection', function(socket) {
         console.log(rmName);
         var rm = rooms[rmName];
         var data = {
+            gm: rm.getGm(),
             id: socket.id,
             name: senderName,
             msg: msg
@@ -229,18 +230,22 @@ io.on('connection', function(socket) {
 
     // Handle game making
     socket.on('make-game', function(valArr) {
-        console.log(valArr);
+        var player = players[socket.id];
+        var rmName = player.getRoom();
         var game = new Game(valArr[0], valArr[1], valArr[2]);
-        var rmName = players[socket.id].room;
+        var data = {
+            gm: socket.id,
+            name: player.getName(),
+            qns: game.qns,
+            cat: game.category,
+        };
+
+        // End current game
+        rooms[rmName].endGame();
 
         // Update room game status
         rooms[rmName].startGame(game);
 
-        var data = {
-            gm: socket.id,
-            qns: game.qns,
-            cat: game.category,
-        }
         io.to(rmName).emit('start-game', data);
     });
 });

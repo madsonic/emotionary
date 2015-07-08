@@ -1,10 +1,11 @@
-function Room(name, public, password) {
+function Room(name, gm, public, password) {
     this.name = name;
     this.public = public || true;
     this.password = password || null;
     this.chatHistory = [];
     this.game = null;
     this.gameStarted = false;
+    this.gm = gm || null;
 }
 
 Room.prototype.getName = function() {
@@ -48,5 +49,9 @@ Room.prototype.isPlaying = function() {
 Room.prototype.getChatHistory = function() {
     return this.chatHistory;
 };
+
+Room.prototype.getGm = function() {
+    return this.gm;
+}
 
 var exports = module.exports = Room;
