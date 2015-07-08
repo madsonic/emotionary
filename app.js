@@ -177,7 +177,13 @@ io.on('connection', function(socket) {
             case 'join-room':
                 console.log('join room');
                 if (rooms.hasOwnProperty(val)) {
-                    socket.emit('form-validate-result', true);
+                    if (rooms[val].isPlaying()) {
+                        socket
+                            .emit('form-validate-result', false,
+                                  'Game is in progress! Join later');
+                    } else {
+                        socket.emit('form-validate-result', true);
+                    }
                 } else {
                     socket
                         .emit('form-validate-result', false,

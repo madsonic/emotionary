@@ -35,7 +35,7 @@ function afterReady() {
         }
     }).on('shown.bs.modal', function() {
         // focus modal input
-        $(this).find('input').focus();
+        $(this).find('input').first().focus();
     }).on('hidden.bs.modal', function() {
         // focus message input
         $('#message').focus();
@@ -73,7 +73,6 @@ function afterReady() {
     var waiting;
     $('.modal').on('keypress', 'form .has-feedback input', function(e) {
         var code = e.keyCode || e.which;
-        console.log(code);
         
         if (code === 13) { // Enter key
             return;
@@ -98,7 +97,6 @@ function afterReady() {
     });
 
     // Send message event handler
-
     $('#send-message').click(function(e) {
         console.log("clicking send")
         e.preventDefault();
@@ -297,6 +295,8 @@ function alertMsg(msg, context) {
 
 function updateGmCtrl(gmID, nextState) {
     var $sidebar = $('#sidebar-wrapper');
+
+    // markups for different state
     var state = {
         inGame: 
             '<li>'  +
