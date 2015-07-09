@@ -5804,7 +5804,7 @@ button.close {
 .container-fluid, .text-box div:last-child, .message-history {
   padding-right: 0; }
 
-#wrapper, #sidebar-wrapper, #sidebar-link, .text-box {
+#wrapper, #sidebar-wrapper, #sidebar-link, .gm, .text-box {
   -webkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
@@ -5815,11 +5815,11 @@ button.close {
   color: #fff; }
 
 .sidebar-nav li a:hover {
-  background: rgba(255, 255, 255, 0.2); }
+  background-color: rgba(255, 255, 255, 0.2); }
 
 .sidebar-nav.gm li a:hover {
   text-decoration: none;
-  background-color: #4d70ba; }
+  background-color: #66b3ff; }
 
 /*!
  * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
@@ -5898,8 +5898,21 @@ button.close {
       color: #777777; }
   .sidebar-nav.gm li a {
     color: black;
-    background-color: #3b5999; }
+    background-color: #3399ff; }
 
+/* Animations */
+.blink#rm-name {
+  animation-name: blink;
+  animation-duration: 1.5s;
+  animation-delay: 0.35s;
+  animation-timing-function: ease-in-out; }
+@keyframes blink {
+  0% {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2); }
+  100% {
+    color: #777777;
+    background-color: #000; } }
 .text-box {
   position: fixed;
   left: 0;

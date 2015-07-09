@@ -92,12 +92,6 @@ function afterReady() {
         }
     });
 
-    // Sidebar btn
-    $('a[href="#sidebar-link"]').click(function(e) {
-        e.preventDefault();
-        $('#wrapper').toggleClass('sidebar-active');
-    });
-
     // Send message event handler
     $('#send-message').click(function(e) {
         console.log("clicking send")
@@ -112,6 +106,12 @@ function afterReady() {
             $('#message').val('');
         }
     });
+
+    // Responsive sidebar btn 
+    $('a[href="#sidebar-link"]').click(function(e) {
+        e.preventDefault();
+        $('#wrapper').toggleClass('sidebar-active');
+    });
 }
 
 // SOCKET EVENT LISTENERS
@@ -125,14 +125,17 @@ socket.on('message', function(data) {
     receiveMsg(data);
 });
 
-socket.on('rm-update-success', function(data) {
-    console.log('success');
-
+socket.on('room-update', function(data) {
     $('.modal').modal('hide');
-    appendMsg(data.msg, 'announcement');
-    $('#rm-name').text(data.room.name);  
-});
+    clearScreen(data.id);
 
+    appendMsg(data.greeting, 'announcement');
+    $('#rm-name').text(data.room);
+
+    // clone and add back for animation restart
+    restartAnimation($('#rm-name'), 'blink', data.id);
+});
+ 
 socket.on('role-change', function(gameMasterID) {
     updateGmCtrl(gameMasterID, 'end');
 });
@@ -211,16 +214,6 @@ socket.on('start-game', function(data) {
     appendMsg(data.cat);
 
 });
-
-// socket.on('correct-ans', function(responder) {
-//     appendMsg(responder.name + ' guessed the right answer!', 'announcement');
-//     appendMsg('The answer was: ' + responder.msg, 'announcement');
-//     updateGmCtrl(responder.gm, 'end');
-
-//     if (responder.id !== socket.id) {
-//         appendMsg("Awwww.....");
-//     }
-// });
 
 socket.on('end-game', function(data) {
     if (data.type === 'proper') {
@@ -354,14 +347,14 @@ function updateGmCtrl(gmID, nextState) {
 
             if (nextState === 'start') {
                 // change nav to in-game state
-
                 $gmNav.html(state.inGame);
                 $gmNav.data('playing', true);
+                restartAnimation($gmNav, 'blink');
             } else if (nextState === 'end') {
-                    
                 // change to end-game state
                 $gmNav.html(state.newGame);
                 $gmNav.data('playing', false);
+                restartAnimation($gmNav, 'blink');
             }
         } else {
             // New GM
@@ -369,11 +362,27 @@ function updateGmCtrl(gmID, nextState) {
             // new gm no gm nav yet
             $sidebar.find('.sidebar-nav').after(state.newGm);
             $sidebar.find('.gm').data('playing', false);
+            restartAnimation($('.sidebar-wrapper .gm'), 'blink');
         }
     } else { 
 
         // removes ctrl
         $('.sidebar-nav.gm').remove();
+    }
+}
+
+// Clears all message on caller's screen
+function clearScreen(id) {
+    if (socket.id === id) {
+        $('.message-history').html('');
+    }
+}
+
+// Hack to restart CSS3 animation
+function restartAnimation($target, animation, id) {
+    if (socket.id === id) {
+        var $copy = $target.addClass(animation).clone(true);
+        $target.replaceWith($copy);
     }
 }
 

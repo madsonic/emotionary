@@ -1,7 +1,7 @@
-function Player(name) {
+function Player(name, room) {
     this.name = name;
     this.role = 'player';
-    this.room = 'lobby';
+    this.room = room || 'lobby';
 }
 
 Player.prototype.getName = function() {

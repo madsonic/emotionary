@@ -50,7 +50,7 @@ Room.prototype.getChatHistory = function() {
     return this.chatHistory;
 };
 
-Room.prototype.getGm = function() {
+Room.prototype.getGmID = function() {
     return this.gm;
 }
 

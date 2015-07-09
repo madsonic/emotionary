@@ -7,8 +7,8 @@
  * Adapted from Start Bootstrap
  */
 
-#wrapper, #sidebar-wrapper, #sidebar-link
-  @extend %responsive-slide
+#wrapper, #sidebar-wrapper, #sidebar-link, .gm
+  @extend %transition-ease
 
 #sidebar-link
   position: fixed
@@ -101,8 +101,16 @@
         @extend %navbrand-hover
   &.gm
     li a
-      color: $gamemaster-text-color
-      background-color: $gamemaster-bg-color
+      color: $gm-text-color
+      background-color: $gm-bg-color
 
       &:hover
         @extend %gm-hover
+
+/* Animations */
+.blink#rm-name
+  animation-name: blink
+  animation-duration: 1.5s
+  animation-delay: 0.35s
+  animation-timing-function: ease-in-out
+  +blink-animation($sb-bg-color, $sb-text-color, $sb-item-hover-color, $sb-text-hover-color)
