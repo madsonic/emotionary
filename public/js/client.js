@@ -44,7 +44,7 @@ function afterReady() {
     // User registration handler
     $('.modal').on('submit', 'form', function(e) {
         e.preventDefault();
-        console.log(e);
+        // console.log(e);
 
         // Send data
         var $input = $(this).find('input');
@@ -66,6 +66,8 @@ function afterReady() {
                 return $(this).val();
             }).get();
             makeGame(valArr);
+        } else if (id === 'end-game') {
+            endGame();
         }
     });
 
@@ -210,14 +212,36 @@ socket.on('start-game', function(data) {
 
 });
 
-socket.on('correct-ans', function(responder) {
-    appendMsg(responder.name + ' guessed the right answer!', 'announcement');
-    appendMsg('The answer was: ' + responder.msg, 'announcement');
-    updateGmCtrl(responder.gm, 'end');
+// socket.on('correct-ans', function(responder) {
+//     appendMsg(responder.name + ' guessed the right answer!', 'announcement');
+//     appendMsg('The answer was: ' + responder.msg, 'announcement');
+//     updateGmCtrl(responder.gm, 'end');
 
-    if (responder.id !== socket.id) {
-        appendMsg("Awwww.....");
+//     if (responder.id !== socket.id) {
+//         appendMsg("Awwww.....");
+//     }
+// });
+
+socket.on('end-game', function(data) {
+    if (data.type === 'proper') {
+
+        // ended game via guessing
+        appendMsg(data.name + ' guessed the right answer!', 'announcement');
+        appendMsg('The answer was: ' + data.msg, 'announcement');
+
+        if (data.id !== socket.id && data.gm !== socket.id) { 
+            // neither gm nor winner
+            appendMsg("Awwww..... Try harder next round"); 
+        }
+
+    } else if (data.type === 'improper') {
+
+        // forced end
+        $('.modal').modal('hide');
+        appendMsg(data.name + ' ended the game', 'announcement');
+
     }
+    updateGmCtrl(data.id, 'end');
 });
 
 socket.on('wrong-ans', function() {
@@ -248,6 +272,11 @@ function sendMsg(msg) {
 
 function makeGame(valArr) {
     socket.emit('make-game', valArr);
+}
+
+function endGame() {
+    console.log('end game');
+    socket.emit('end-game');
 }
 
 // HELPER
@@ -319,20 +348,16 @@ function updateGmCtrl(gmID, nextState) {
 
     if (socket.id === gmID) {
         // GM browser
-        console.log('a');
         if ($sidebar.has('.gm').length > 0) {
             // existing GM
             var $gmNav = $sidebar.find('.gm');
-            console.log('b');
 
             if (nextState === 'start') {
                 // change nav to in-game state
-                console.log('c');
 
                 $gmNav.html(state.inGame);
                 $gmNav.data('playing', true);
             } else if (nextState === 'end') {
-                console.log('d');
                     
                 // change to end-game state
                 $gmNav.html(state.newGame);
@@ -340,14 +365,12 @@ function updateGmCtrl(gmID, nextState) {
             }
         } else {
             // New GM
-            console.log('e');
 
             // new gm no gm nav yet
             $sidebar.find('.sidebar-nav').after(state.newGm);
             $sidebar.find('.gm').data('playing', false);
         }
     } else { 
-        console.log('f');
 
         // removes ctrl
         $('.sidebar-nav.gm').remove();

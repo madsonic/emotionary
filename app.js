@@ -198,19 +198,12 @@ io.on('connection', function(socket) {
     // If there is a ongoing game, all players will be in answer mode
     // and only the game master is in chat mode
     socket.on('message', function(msg) {
-        // Check if it is a chat message or a game answer
         var sender = players[socket.id];
         var senderName = sender.getName();
         var rmName = sender.getRoom();
-        console.log(rmName);
         var rm = rooms[rmName];
-        var data = {
-            gm: rm.getGm(),
-            id: socket.id,
-            name: senderName,
-            msg: msg
-        }
 
+        // Check if it is a chat message or a game answer
         if (rm.isPlaying() && sender.getRole() === 'player') {
             console.log('checking ans');
             // message as ans
@@ -218,8 +211,17 @@ io.on('connection', function(socket) {
                 // End game
                 // Add to player score
                 console.log('Correct!');
-                io.to(rmName).emit('correct-ans', data);
-                rm.endGame();
+                var data = {
+                    type: 'proper',
+                    gm: rm.getGm(),
+                    id: socket.id,
+                    name: senderName,
+                    msg: msg
+                };
+                // io.to(rmName).emit('correct-ans', data);
+                // rm.endGame();
+                endGame(rmName, data);
+
                 console.log(rooms[rmName]);
             } else {
                 // Do nothing 
@@ -230,6 +232,12 @@ io.on('connection', function(socket) {
         } else {
             // normal chat messages
             console.log('chat messages');
+            var data = {
+                id: socket.id,
+                name: senderName,
+                msg: msg
+            };
+
             socket.broadcast.to(rmName).emit('message', data);
         }
     });
@@ -254,7 +262,27 @@ io.on('connection', function(socket) {
 
         io.to(rmName).emit('start-game', data);
     });
+
+    // Handle end game
+    socket.on('end-game', function() {
+        console.log('end game');
+        var data = {
+            type: 'improper',
+            id: socket.id,
+            name: players[socket.id].getName(),
+        };
+        var rmName = players[socket.id].getRoom();
+        endGame(rmName, data);
+    });
+
 });
+
+
+function endGame(roomName, data) {
+    io.to(roomName).emit('end-game', data);
+    rooms[roomName].endGame();
+}
+
 var port = process.env.PORT || 3000;
 http.listen(port, function() {
     console.log('listening on *:' + port);
