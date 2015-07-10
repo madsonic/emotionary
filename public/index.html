@@ -4,6 +4,12 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Quiz Bomb">
+    <meta property="og:url" content="http://quizbomb.herokuapp.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Are you ready for some fun? Play Quizbomb with your friends and put their wits to the test!">
 
     <title>Quiz Bomb</title>
     
@@ -27,12 +33,29 @@
                     <a id="rm-name">Lobby</a>
                 </li>
                 <li>
-                    <a href="views/create-room.html" data-toggle="modal" data-target=".modal" data-backdrop="true">Create Room</a>
+                    <a href="views/create-room.html" data-toggle="modal" data-target=".modal">Create Room</a>
                 </li>
                 <li>
-                    <a href="views/join-room.html" data-toggle="modal" data-target=".modal" data-backdrop="true">Join Room</a>
+                    <a href="views/join-room.html" data-toggle="modal" data-target=".modal">Join Room</a>
                 </li>
             </ul>
+
+            <div class="container-fluid social">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fquizbomb.herokuapp.com" target="_blank">
+                        <i class="fa fa-2x fa-facebook-official"></i></a>
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="https://github.com/varunpatro/quizbomb" target="_blank">
+                        <i class="fa fa-2x fa-github"></i></a>
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="views/about.html" data-toggle="modal" data-target=".modal">
+                        <i class="fa fa-2x fa-question"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Main content -->
@@ -53,16 +76,16 @@
                 <ul class="message-history"></ul>
 
                 <!-- text box -->
-                <div class="row text-box-wrapper">
-                    <form class="text-box">
+                <!-- <div class="row text-box-wrapper"> -->
+                    <form class="row text-box">
                         <div class="col-xs-11">
                             <input class="form-control" id="message" type="text"  autocomplete="off">
                         </div>
                         <div class="col-xs-1">
-                            <button class="btn btn-success" id="send-message"><span class="glyphicon glyphicon-send"></span></button>
+                            <button class="btn btn-success" id="send-message"><i class="fa fa-send"></i></button>
                         </div>
                     </form>
-                </div>
+                <!-- </div> -->
             </div>
 
         </div> 

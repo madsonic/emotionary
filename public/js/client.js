@@ -35,7 +35,7 @@ function afterReady() {
         }
     }).on('shown.bs.modal', function() {
         // focus modal input
-        $(this).find('input').focus();
+        $(this).find('input').first().focus();
     }).on('hidden.bs.modal', function() {
         // focus message input
         $('#message').focus();
@@ -44,7 +44,7 @@ function afterReady() {
     // User registration handler
     $('.modal').on('submit', 'form', function(e) {
         e.preventDefault();
-        console.log(e);
+        // console.log(e);
 
         // Send data
         var $input = $(this).find('input');
@@ -66,6 +66,8 @@ function afterReady() {
                 return $(this).val();
             }).get();
             makeGame(valArr);
+        } else if (id === 'end-game') {
+            endGame();
         }
     });
 
@@ -73,7 +75,6 @@ function afterReady() {
     var waiting;
     $('.modal').on('keypress', 'form .has-feedback input', function(e) {
         var code = e.keyCode || e.which;
-        console.log(code);
         
         if (code === 13) { // Enter key
             return;
@@ -91,14 +92,7 @@ function afterReady() {
         }
     });
 
-    // Sidebar btn
-    $('a[href="#sidebar-link"]').click(function(e) {
-        e.preventDefault();
-        $('#wrapper').toggleClass('sidebar-active');
-    });
-
     // Send message event handler
-
     $('#send-message').click(function(e) {
         console.log("clicking send")
         e.preventDefault();
@@ -111,6 +105,12 @@ function afterReady() {
             receiveMsg({msg: msg});
             $('#message').val('');
         }
+    });
+
+    // Responsive sidebar btn 
+    $('a[href="#sidebar-link"]').click(function(e) {
+        e.preventDefault();
+        $('#wrapper').toggleClass('sidebar-active');
     });
 }
 
@@ -125,29 +125,19 @@ socket.on('message', function(data) {
     receiveMsg(data);
 });
 
-socket.on('rm-update-success', function(data) {
-    console.log('success');
-
+socket.on('room-update', function(data) {
     $('.modal').modal('hide');
-    appendMsg(data.msg);
-    $('#rm-name').text(data.room.name);    
-});
+    clearScreen(data.id);
 
+    appendMsg(data.greeting, 'announcement');
+    $('#rm-name').text(data.room);
+
+    // clone and add back for animation restart
+    restartAnimation($('#rm-name'), 'blink', data.id);
+});
+ 
 socket.on('role-change', function(gameMasterID) {
-    if (socket.id === gameMasterID) {
-        console.log('role to gm');
-        var markup = 
-            "<ul class='sidebar-nav gm'>" +
-                "<li>"  +
-                    "<a href='views/make-game.html' data-toggle='modal' data-target='.modal'>Start Game</a>"+
-                "</li>" +
-            "</ul>";
-        
-        $('.sidebar-nav').after(markup);
-    } else {
-        console.log('role to player');
-        $('.sidebar-nav.gm').remove();
-    }
+    updateGmCtrl(gameMasterID, 'end');
 });
 
 ////////////////////
@@ -214,18 +204,37 @@ socket.on('form-validate-result', function(result, msg) {
 
 socket.on('start-game', function(data) {
     $('.modal').modal('hide');
-    appendMsg('Game has started!');
-    appendMsg(data.qns);
+
+    // Add gm controls for gm browser
+    updateGmCtrl(data.gm, 'start');
+
+    // Announce start of game
+    appendMsg(data.name + ' has started a new game', 'announcement');
+    appendMsg('Question: ' + data.qns + '?', 'announcement');
     appendMsg(data.cat);
+
 });
 
-socket.on('correct-ans', function(responder) {
-    appendMsg(responder.name + " guessed the right answer!");
-    appendMsg("The answer was: " + responder.msg);
+socket.on('end-game', function(data) {
+    if (data.type === 'proper') {
 
-    if (responder.id !== socket.id) {
-        appendMsg("Awwww.....");
+        // ended game via guessing
+        appendMsg(data.name + ' guessed the right answer!', 'announcement');
+        appendMsg('The answer was: ' + data.msg, 'announcement');
+
+        if (data.id !== socket.id && data.gm !== socket.id) { 
+            // neither gm nor winner
+            appendMsg("Awwww..... Try harder next round"); 
+        }
+
+    } else if (data.type === 'improper') {
+
+        // forced end
+        $('.modal').modal('hide');
+        appendMsg(data.name + ' ended the game', 'announcement');
+
     }
+    updateGmCtrl(data.id, 'end');
 });
 
 socket.on('wrong-ans', function() {
@@ -258,6 +267,11 @@ function makeGame(valArr) {
     socket.emit('make-game', valArr);
 }
 
+function endGame() {
+    console.log('end game');
+    socket.emit('end-game');
+}
+
 // HELPER
 function receiveMsg(data) {
     console.log('receive msg fn');
@@ -267,12 +281,109 @@ function receiveMsg(data) {
         $('.message-history').append("<li>" + data.name + ": " + data.msg);
     } else {
         console.log('from yourself')
-        $('.message-history').append("<li>you: " + data.msg);
+        // $('.message-history').append("<li>you: " + data.msg);
+        appendMsg('you: ' + data.msg);
+    }
+}
+/*
+    Appends msg to message history. Type will become class attribute
+    Types in use (if not specified, it will be a normal message)
+    announcement - centers text
+ */
+function appendMsg(msg, type) {
+    if (msg !== '' && msg !== undefined && msg !== null) {
+        if (type === undefined) {
+            $('.message-history').append('<li>' + msg);
+        } else {
+            $('.message-history').append('<li class='+ ' \" ' + type+ ' \"> ' + msg);
+        }
     }
 }
 
-function appendMsg(msg) {
-    $('.message-history').append("<li class='announcement'>" + msg);
+// Adds a alert msg in bootstrap form. Replaces the message if it exists
+function alertMsg(msg, context) {
+    console.log('alert msg');
+    var $context = $(context);
+    var $alert = $context.find('.alert');
+    var $form = $context.find('form');
+    var m = '<div class="alert alert-danger">' + msg + '</div>';
+    
+    if ($alert.length === 0) { // New error
+        $form.find('.form-group').after(m);
+    } else { // Recurring error
+        $alert.html(msg);
+    }
+}
+
+function updateGmCtrl(gmID, nextState) {
+    var $sidebar = $('#sidebar-wrapper');
+
+    // markups for different state
+    var state = {
+        inGame: 
+            '<li>'  +
+                '<a href="views/make-game.html" data-toggle="modal" data-target=".modal">Restart Game</a>'+
+            '</li>' +
+            '<li>'  +
+                '<a href="views/end-game.html" data-toggle="modal" data-target=".modal">End Game</a>'+
+            '</li>',
+        newGame: 
+            '<li>' +
+                '<a href="views/make-game.html" data-toggle="modal" data-target=".modal">Start Game</a>'+
+            '</li>',
+        newGm:
+            '<ul class="sidebar-nav gm">' +
+                '<li>'  +
+                    '<a href="views/make-game.html" data-toggle="modal" data-target=".modal">Start Game</a>'+
+                '</li>' +
+            '</ul>',
+    };
+
+    if (socket.id === gmID) {
+        // GM browser
+        if ($sidebar.has('.gm').length > 0) {
+            // existing GM
+            var $gmNav = $sidebar.find('.gm');
+
+            if (nextState === 'start') {
+                // change nav to in-game state
+                $gmNav.html(state.inGame);
+                $gmNav.data('playing', true);
+                restartAnimation($gmNav, 'blink');
+            } else if (nextState === 'end') {
+                // change to end-game state
+                $gmNav.html(state.newGame);
+                $gmNav.data('playing', false);
+                restartAnimation($gmNav, 'blink');
+            }
+        } else {
+            // New GM
+
+            // new gm no gm nav yet
+            $sidebar.find('.sidebar-nav').after(state.newGm);
+            $sidebar.find('.gm').data('playing', false);
+            restartAnimation($('.sidebar-wrapper .gm'), 'blink');
+        }
+    } else { 
+
+        // removes ctrl
+        $('.sidebar-nav.gm').remove();
+    }
+}
+
+// Clears all message on caller's screen
+function clearScreen(id) {
+    if (socket.id === id) {
+        $('.message-history').html('');
+    }
+}
+
+// Hack to restart CSS3 animation
+function restartAnimation($target, animation, id) {
+    if (socket.id === id) {
+        var $copy = $target.addClass(animation).clone(true);
+        $target.replaceWith($copy);
+    }
 }
 
 // Init 

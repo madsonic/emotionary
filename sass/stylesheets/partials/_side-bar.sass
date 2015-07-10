@@ -7,8 +7,8 @@
  * Adapted from Start Bootstrap
  */
 
-#wrapper, #sidebar-wrapper, #sidebar-link
-  @extend %responsive-slide
+#wrapper, #sidebar-wrapper, #sidebar-link, .gm
+  @extend %transition-ease
 
 #sidebar-link
   position: fixed
@@ -61,7 +61,6 @@
   overflow-y: auto
   background: $sb-bg-color
 
-
 /* Sidebar Styles */
 
 .sidebar-nav
@@ -73,21 +72,12 @@
   list-style: none
 
   li
+    // display: block
     text-indent: 10px
     line-height: 40px
 
     a
-      display: block
-      text-decoration: none
-      color: $sb-text-color
-
-      &:hover
-        @extend %nav-item-hover
-
-      &:active,
-      &:focus
-        text-decoration: none
-        outline: none
+      @extend %nav-button
 
   > .sidebar-brand
     height: 65px
@@ -101,8 +91,29 @@
         @extend %navbrand-hover
   &.gm
     li a
-      color: $gamemaster-text-color
-      background-color: $gamemaster-bg-color
+      color: $gm-text-color
+      background-color: $gm-bg-color
 
       &:hover
         @extend %gm-hover
+
+.social
+  position: absolute
+  bottom: 10px
+  left: 0
+  right: 0
+  text-align: center
+
+  .row
+    @extend %no-side-margin
+
+  a
+    @extend %nav-button
+
+/* Animations */
+.blink#rm-name
+  animation-name: blink
+  animation-duration: 1.5s
+  animation-delay: 0.35s
+  animation-timing-function: ease-in-out
+  +blink-animation($sb-bg-color, $sb-text-color, $sb-item-hover-color, $sb-text-hover-color)

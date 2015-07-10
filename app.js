@@ -22,21 +22,23 @@ app.get('/', function(req, res) {
     gameStarted: bool
     game: game obj;
 */
-var default_lobby = new Room('lobby', true);
-var rooms = { 'lobby': default_lobby };
+var __lobby = new Room('Lobby');
+var __lobbyName = __lobby.getName();
+var __rooms = {};
+__rooms[__lobbyName] = __lobby;
 
 /*  Player
     name: str
     role: str ('admin' | 'player')
     room: str
 */
-var test_player = new Player('bot');
-var players = { 'socketid': test_player };
+var testPlayer = new Player('bot');
+var __players = { 'socketid': testPlayer };
 
 var nicknames = ['bot'];
 
-module.exports.players = players;
-module.exports.rooms = rooms;
+module.exports.players = __players;
+module.exports.rooms = __rooms;
 
 io.on('connection', function(socket) {
     console.log('a user connected');
@@ -48,109 +50,122 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         console.log(socket.id + ' has left the game');
 
-        if (players.hasOwnProperty(socket.id)) {
-            var name = players[socket.id].getName();
+        if (__players.hasOwnProperty(socket.id)) {
+            var name = __players[socket.id].getName();
             var i = nicknames.indexOf(name);
 
             // Delete from nicknames
             nicknames.splice(i, 1);
 
             // Delete from players
-            delete players[socket.id];
-            console.log(players);
+            delete __players[socket.id];
+            console.log(__players);
             console.log(nicknames);
 
             // Leave room - socket.io handles it
         }
     });
 
+    ////////////////////
+    //   Room Stuff   //
+    ////////////////////
+
     // handle user registration
     socket.on('register', function(nickname) {
-       console.log("server register: " + nickname + " " + socket.id);
  
         var player = new Player(nickname);
-        players[socket.id] = player;
-        nicknames.push(nickname);
+        console.log(player);
+        socket.join(__lobbyName, function() {
+            console.log('join default lobby');
+            // player.setRoom(__lobbyName);
 
-        socket.join('lobby');
+            __players[socket.id] = player;
+            nicknames.push(nickname);
+            
+            io.to(__lobbyName)
+                  .emit('room-update', 
+                        {
+                          id: socket.id,
+                          greeting: nickname + ' has joined',
+                          room: player.getRoom(),
+                        });
+        });
 
-        console.log(players);
-        console.log(nicknames);
-
-        // Declare success to client
-        socket
-          .emit('rm-update-success', 
-                {
-                  msg: 'Welcome ' + nickname, 
-                  room: player.getRoom(),
-                });
     });
 
     // create new room for the user.
     socket.on('create-room', function(roomName) {
 
-        if (rooms.hasOwnProperty(roomName)) {
-            console.log("create room error");
-            socket.emit('room-error', '\"' + roomName + '\" already exists. Please choose another name');
-        } else {
-            console.log('making room');
-            var newRoom = new Room(roomName);
-            var oldRoom = players[socket.id].getRoom();
+        var player = __players[socket.id];
+        var oldRoom = player.getRoom();
+        var newRoom = new Room(roomName, socket.id, player.getName());
 
-            // Update player status.
-            // Room creators are game master by default
-            socket.join(roomName);
-            socket.leave(oldRoom);
-            players[socket.id].setRoom(roomName);
-            players[socket.id].setRole('gm');
+        // remove room if last player in room
+        socket.leave(oldRoom, function() {
+            __rooms[oldRoom].evictOccupants(player.getName());
+
+            if (oldRoom !== __lobbyName && __rooms[oldRoom].isEmpty()) {
+                delete __rooms[oldRoom];
+            }
+        });
+        
+        // Update player status.
+        // Room creators are game master by default
+        socket.join(roomName, function() {
+            player.setRoom(roomName);
+            player.setRole('gm');
 
             // Update room list
-            rooms[roomName] = newRoom;
+            __rooms[roomName] = newRoom;
 
-            console.log(rooms);
-            console.log(players[socket.id]);
-
-            socket.emit('rm-update-success', 
+            socket.emit('room-update', 
                         {
-                            msg: '\"' + roomName + '\" successfully created.', 
-                            room: newRoom
+                            id: socket.id,
+                            room: roomName
                         });
-            io.to(roomName).emit('role-change', socket.id);
-        }
+            socket.emit('role-change', socket.id);
+        });
     });
 
     // handle room joining
     socket.on('join-room', function(roomName) {
 
-        var newRm = rooms[roomName];
-        var player = players[socket.id];
+        var player = __players[socket.id];
+        var oldRoom = player.getRoom();
+        var newRoom = __rooms[roomName];
 
-        if(!rooms.hasOwnProperty(roomName)) {
-            // no such room
-            console.log('no such room');
-        } else if (!newRm.isOpen()) {
-            // room closed
-            console.log('room closed');
-        } else { // join the room
-            console.log('joining room');
-            var oldRmName = players[socket.id].room;
+        // remove room if last player in room
+        socket.leave(oldRoom, function() {
+            __rooms[oldRoom].evictOccupants(player.getName());
 
-            // Update player status
-            socket.join(roomName);
-            socket.leave(oldRmName);
+            if (oldRoom !== __lobbyName && __rooms[oldRoom].isEmpty()) {
+                delete __rooms[oldRoom];
+            }
+        });
+        
+        // Update player status
+        socket.join(roomName, function() {
             player.setRoom(roomName);
+            player.setRole('player');
+            __rooms[roomName].addOccupant(player.getName());
 
-            if (player.getRole() === 'gm') { player.setRole('player'); }
+            io.to(roomName).emit('room-update', 
+                      { 
+                        id: socket.id,
+                        greeting: player.getName() + ' has joined',
+                        room: roomName,
+                      });
+            socket.emit('role-change', newRoom.getGmID());
+        });
 
-            console.log(player);
-            var msg = 'Welcome to \'' + roomName + '\''
-            socket.emit('rm-update-success', {msg: msg, room: newRm});
-        }
     });
+
+    ////////////////////
+    //   Form Stuff   //
+    ////////////////////
 
     // Handle input validation
     socket.on('validate', function(formName, val) {
-        console.log('validating')
         switch (formName) {
 
             case 'registration':
@@ -164,8 +179,7 @@ io.on('connection', function(socket) {
                 break;
 
             case 'create-room':
-                console.log('create room');
-                if (rooms.hasOwnProperty(val)) {
+                if (__rooms.hasOwnProperty(val)) {
                     socket
                         .emit('form-validate-result', false,
                               '\'' + val + '\' already exists');
@@ -175,9 +189,14 @@ io.on('connection', function(socket) {
                 break;
 
             case 'join-room':
-                console.log('join room');
-                if (rooms.hasOwnProperty(val)) {
-                    socket.emit('form-validate-result', true);
+                if (__rooms.hasOwnProperty(val)) {
+                    if (__rooms[val].isPlaying()) {
+                        socket
+                            .emit('form-validate-result', false,
+                                  'Game is in progress! Join later');
+                    } else {
+                        socket.emit('form-validate-result', true);
+                    }
                 } else {
                     socket
                         .emit('form-validate-result', false,
@@ -187,23 +206,21 @@ io.on('connection', function(socket) {
         }
     });
 
+    ////////////////////
+    //   Game Stuff   //
+    ////////////////////
+
     // Handle message transfer
     // If game is not in progress, everyone is in chat mode
     // If there is a ongoing game, all players will be in answer mode
     // and only the game master is in chat mode
     socket.on('message', function(msg) {
-        // Check if it is a chat message or a game answer
-        var sender = players[socket.id];
+        var sender = __players[socket.id];
         var senderName = sender.getName();
         var rmName = sender.getRoom();
-        console.log(rmName);
-        var rm = rooms[rmName];
-        var data = {
-            id: socket.id,
-            name: senderName,
-            msg: msg
-        }
+        var rm = __rooms[rmName];
 
+        // Check if it is a chat message or a game answer
         if (rm.isPlaying() && sender.getRole() === 'player') {
             console.log('checking ans');
             // message as ans
@@ -211,9 +228,18 @@ io.on('connection', function(socket) {
                 // End game
                 // Add to player score
                 console.log('Correct!');
-                io.to(rmName).emit('correct-ans', data);
-                rm.endGame();
-                console.log(rooms[rmName]);
+                var data = {
+                    type: 'proper',
+                    gm: rm.getGmID(),
+                    id: socket.id,
+                    name: senderName,
+                    msg: msg
+                };
+                // io.to(rmName).emit('correct-ans', data);
+                // rm.endGame();
+                endGame(rmName, data);
+
+                console.log(__rooms[rmName]);
             } else {
                 // Do nothing 
                 console.log('Wrong. Try again');
@@ -223,27 +249,57 @@ io.on('connection', function(socket) {
         } else {
             // normal chat messages
             console.log('chat messages');
+            var data = {
+                id: socket.id,
+                name: senderName,
+                msg: msg
+            };
+
             socket.broadcast.to(rmName).emit('message', data);
         }
     });
 
     // Handle game making
     socket.on('make-game', function(valArr) {
-        console.log(valArr);
+        var player = __players[socket.id];
+        var rmName = player.getRoom();
         var game = new Game(valArr[0], valArr[1], valArr[2]);
-        var rmName = players[socket.id].room;
-
-        // Update room game status
-        rooms[rmName].startGame(game);
-
         var data = {
             gm: socket.id,
+            name: player.getName(),
             qns: game.qns,
             cat: game.category,
-        }
+        };
+
+        // End current game
+        __rooms[rmName].endGame();
+
+        // Update room game status
+        __rooms[rmName].startGame(game);
+
         io.to(rmName).emit('start-game', data);
     });
+
+    // Handle end game
+    socket.on('end-game', function() {
+        console.log('end game');
+        var data = {
+            type: 'improper',
+            id: socket.id,
+            name: __players[socket.id].getName(),
+        };
+        var rmName = __players[socket.id].getRoom();
+        endGame(rmName, data);
+    });
+
 });
+
+
+function endGame(roomName, data) {
+    io.to(roomName).emit('end-game', data);
+    __rooms[roomName].endGame();
+}
+
 var port = process.env.PORT || 3000;
 http.listen(port, function() {
     console.log('listening on *:' + port);

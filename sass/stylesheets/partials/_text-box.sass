@@ -7,13 +7,14 @@
   bottom: 0
   padding: $text-box-padding
   background: #e6e6e6
-  @extend %responsive-slide
+  @extend %transition-ease
+  @extend %no-side-margin
 
   .glyphicon
     left: -4px
 
   div:last-child
-    @extend %no-lr-padding
+    @extend %no-side-padding
 
   [class*="col-"]
     @extend %no-left-padding

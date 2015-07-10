@@ -7,12 +7,22 @@
 %no-right-padding
   padding-right: 0
 
-%no-lr-padding
+%no-side-padding
   @extend %no-left-padding
   @extend %no-right-padding
 
-// Responsive animation
-%responsive-slide
+%no-left-margin
+  margin-left: 0
+
+%no-right-margin
+  margin-right: 0
+
+%no-side-margin
+  @extend %no-left-margin
+  @extend %no-right-margin
+
+// Animation
+%transition-ease, 
   -webkit-transition: all 0.2s ease
   -moz-transition: all 0.2s ease
   -o-transition: all 0.2s ease
@@ -25,8 +35,21 @@
 
 %nav-item-hover
   @extend %navbrand-hover
-  background: rgba(255,255,255,0.2)
+  background-color: $sb-item-hover-color
 
 %gm-hover
   text-decoration: none
-  background-color: $gamemaster-bg-hover-color
+  background-color: $gm-bg-hover-color
+
+%nav-button
+  display: block
+  text-decoration: none
+  color: $sb-text-color
+
+  &:hover
+    @extend %nav-item-hover
+
+  &:active,
+  &:focus
+    text-decoration: none
+    outline: none

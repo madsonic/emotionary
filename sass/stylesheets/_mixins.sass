@@ -1,0 +1,9 @@
+// Mixins
+=blink-animation($original-bg-color, $original-text-color, $init-bg-color, $init-text-color)
+  @keyframes blink
+    0%
+      color: $init-text-color
+      background-color: $init-bg-color
+    100%
+      color: $original-text-color
+      background-color: $original-bg-color
