@@ -7654,14 +7654,14 @@ button.close {
 #wrapper {
   padding-left: 0; }
   #wrapper.sidebar-active {
-    padding-left: 130px; }
+    padding-left: 140px; }
     #wrapper.sidebar-active #sidebar-wrapper, #wrapper.sidebar-active #sidebar-link {
-      left: 130px; }
+      left: 140px; }
   @media (min-width: 768px) {
     #wrapper {
-      padding-left: 130px; }
+      padding-left: 140px; }
       #wrapper #sidebar-wrapper {
-        left: 130px; }
+        left: 140px; }
       #wrapper #sidebar-link {
         display: none; } }
 
@@ -7670,8 +7670,8 @@ button.close {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 130px;
-  margin-left: -130px;
+  width: 140px;
+  margin-left: -140px;
   z-index: 1000;
   overflow-y: auto;
   background: #000; }
@@ -7728,10 +7728,10 @@ button.close {
     left: -4px; }
 
 #wrapper.sidebar-active .text-box {
-  left: 130px; }
+  left: 140px; }
 @media (min-width: 768px) {
   #wrapper .text-box {
-    left: 130px; } }
+    left: 140px; } }
 
 #message:focus {
   border: none;
