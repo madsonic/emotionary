@@ -8,12 +8,13 @@
   padding: $text-box-padding
   background: #e6e6e6
   @extend %transition-ease
+  @extend %no-side-margin
 
   .glyphicon
     left: -4px
 
   div:last-child
-    @extend %no-lr-padding
+    @extend %no-side-padding
 
   [class*="col-"]
     @extend %no-left-padding

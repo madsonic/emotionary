@@ -7,9 +7,19 @@
 %no-right-padding
   padding-right: 0
 
-%no-lr-padding
+%no-side-padding
   @extend %no-left-padding
   @extend %no-right-padding
+
+%no-left-margin
+  margin-left: 0
+
+%no-right-margin
+  margin-right: 0
+
+%no-side-margin
+  @extend %no-left-margin
+  @extend %no-right-margin
 
 // Animation
 %transition-ease, 
@@ -30,3 +40,16 @@
 %gm-hover
   text-decoration: none
   background-color: $gm-bg-hover-color
+
+%nav-button
+  display: block
+  text-decoration: none
+  color: $sb-text-color
+
+  &:hover
+    @extend %nav-item-hover
+
+  &:active,
+  &:focus
+    text-decoration: none
+    outline: none
