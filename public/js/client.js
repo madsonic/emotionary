@@ -34,8 +34,14 @@ function afterReady() {
             $modal.data('bs.modal').options.keyboard = "true";
         }
     }).on('shown.bs.modal', function() {
+        // emoji keyboard
+        $('#qns').emojiPicker({
+            iconBackgroundColor: "#fff"
+        });
+
         // focus modal input
         $(this).find('input').first().focus();
+
     }).on('hidden.bs.modal', function() {
         // focus message input
         $('#message').focus();
@@ -112,6 +118,7 @@ function afterReady() {
         e.preventDefault();
         $('#wrapper').toggleClass('sidebar-active');
     });
+
 }
 
 // SOCKET EVENT LISTENERS

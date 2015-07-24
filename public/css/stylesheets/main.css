@@ -7754,4 +7754,7 @@ button.close {
   .message-history li:nth-child(odd) {
     background: #eee; }
 
+input#qns {
+  background-color: transparent; }
+
 /*# sourceMappingURL=main.css.map */
