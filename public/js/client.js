@@ -4,21 +4,12 @@ var socket = io();
 
 // BIND BROWSER EVENTS TO SOCKET EVENT EMITTERS
 function afterReady() {
-    // Loads registration modal on ready
-    $('.modal-content').load('views/register.html', function() {
-        // show modal and make it permanent until submitted
-        $('.modal').modal({
-            show: true,
-            backdrop: 'static',
-            keyboard: false,
-        });
-    });
-
     // Insert content dynamically so that a common modal can be used
     $('.modal').on('show.bs.modal', function(e) {
         
         var dir = $(e.relatedTarget).attr('href');
         // insert content for modals called via click
+
         if (dir !== undefined) {
             var $modal = $(this);
             var $content = $modal.find('.modal-content');
@@ -149,6 +140,33 @@ socket.on('room-update', function(data) {
  
 socket.on('role-change', function(gameMasterID) {
     updateGmCtrl(gameMasterID, 'end');
+});
+
+socket.on('connect', function () {
+    console.log('connect');
+
+    // Loads registration modal on ready
+    $('.modal-content').load('views/register.html', function() {
+        $('.modal').modal({
+            backdrop: 'static',
+            keyboard: false,
+        });
+
+    });
+});
+
+socket.on('disconnect', function() {
+    console.log('disconnect');
+
+    // smack a modal dialogue onto screen
+    var $content = $('.modal .modal-content');
+    $content.find('.modal-header').html('<h3 class="modal-title text-capitalize">Uh Oh!</h3>');
+    $content.find('.modal-body').html('<div class="modal-body"><p>You have lost connection 😕</p><p>Refresh or click <a href="/">here</a> to regain connection to the game</p></div>');
+
+    $('.modal').modal({
+        backdrop: 'static',
+        keyboard: false,
+    });
 });
 
 ////////////////////
@@ -384,7 +402,7 @@ function updateGmCtrl(gmID, nextState) {
 
 // Clears all message on caller's screen
 function clearScreen(id) {
-    if (socket.id === id) {
+    if (socket.id === id || id === undefined) {
         $('.message-history').html('');
     }
 }

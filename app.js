@@ -41,8 +41,7 @@ module.exports.players = __players;
 module.exports.rooms = __rooms;
 
 io.on('connection', function(socket) {
-    console.log('a user connected');
-    console.log('socket id: ' + socket.id);
+    console.log(socket.id + ' has connected');
 
     // EVENT HANDLERS
 
@@ -64,6 +63,7 @@ io.on('connection', function(socket) {
 
             // Leave room - socket.io handles it
         }
+
     });
 
     ////////////////////
