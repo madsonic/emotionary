@@ -15,17 +15,18 @@ README
 7. [References](#references)
 8. [Log](#log)
 
-# Project Title: Quiz Bomb
+# Project Title: ~~Quiz Bomb~~Emotionary
 
 ### <a name="overview"></a>Overview [↑](#top)
-A web based quiz game. Play timed quiz with your friends or the world! Each round a player sets a question and other players try to guess it. 
+~~A web based quiz game. Play timed quiz with your friends or the world! Each round a player sets a question and other players try to guess it.~~
+A cross between Pictionary and Emojis. Use Emojis instead drawings and let your friends guess what it is suppose to be!
+
+Game is playable on both mobile devices and desktop.
 
 <!-- More description of game. add in visuals -->
 ### <a name="demo"></a><span class="change">Demo</span> [↑](#top)
 [Game Demo][]<br>
 [Game Link][]
-
-<!--*Game is optimised for mobile devices-->
 
 -------------------
 ### <a name="achievement"></a>Proposed Level of Achievement [↑](#top)
@@ -52,23 +53,25 @@ Apollo 11
 
 ####Second Sprint
 
-3.  <span class="change">[x]Message sending</span>
+4.  <span class="change">[x]Message sending</span>
     * As a player I want to send my answer to the 'game master' for verification
     * As a active/non-active player, everyone should be able to see my answer so that we share funny answers
-4. <span class="change">Game logic</span>
+5. <span class="change">Game logic</span>
     * [x]As the game master, I want answers to be accepted immediately when it matches my answer perfectly
     * [x]As the game master, I want to set the question, answer and question category
     * As players, I want the game master to be rotated each round so that I get to set the question
-5.  [x]Form validation
+6.  [x]Form validation
 	 * (This is more for backend) This ensures there are no duplicates of any names as well as for security reasons
 
 ####Final Sprint
 
-6. social sharing
-    * As a player, I want to share with others the game I am playing
-7. score leaderboard
+7. social sharing
+    * [x]As a player, I want to share with others the game I am playing
+8. uniform emoji
+    * [x]As a player, I want to see uniform emoji choices no matter which platform I am on.
+9. score leaderboard
     * As a player I want to see how well I (and other players) have performed
-8. questions bank
+10. questions bank
     * As a game master, I want to sample questions when I run out of questions to set 
 
 -------------------
@@ -124,8 +127,8 @@ Technology:
 
 <!-- links -->
 [game demo]: http://youtu.be/l-rWHvoIWG4
-[prototype]: http://quizbomb.heroku.com
-[game link]: http://quizbomb.heroku.com
+[prototype]: http://emotionary.heroku.com
+[game link]: http://emotionary.heroku.com
 [video]: http://youtu.be/HEGBts_DTzo
 [slides]: https://docs.google.com/presentation/d/1aR7e_4yMLNAcQ9QlRmh7JdMM8Tlh1obsozhcB6fMlt8/edit?usp=sharing 
 [Socket.io]: http://socket.io/

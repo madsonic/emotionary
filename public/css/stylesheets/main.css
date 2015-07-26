@@ -7606,11 +7606,9 @@ button.close {
   -o-transition: all 0.2s ease;
   transition: all 0.2s ease; }
 
-.sidebar-nav li a:hover, .social a:hover, .sidebar-nav > .sidebar-brand a:hover {
-  text-decoration: none;
-  color: #fff; }
-
 .sidebar-nav li a:hover, .social a:hover {
+  text-decoration: none;
+  color: #fff;
   background-color: rgba(255, 255, 255, 0.2); }
 
 .sidebar-nav.gm li a:hover {
@@ -7690,9 +7688,8 @@ button.close {
   .sidebar-nav > .sidebar-brand {
     height: 65px;
     font-size: 18px;
-    line-height: 60px; }
-    .sidebar-nav > .sidebar-brand a {
-      color: #777777; }
+    line-height: 60px;
+    color: #fff; }
   .sidebar-nav.gm li a {
     color: black;
     background-color: #3399ff; }
