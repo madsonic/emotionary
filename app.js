@@ -18,7 +18,6 @@ app.get('/', function(req, res) {
     public: bool
     password: str
     people: arr
-    chatHistory: arr
     gameStarted: bool
     game: game obj;
 */

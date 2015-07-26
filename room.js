@@ -5,7 +5,6 @@ function Room(name, gmID, gm, public, password) {
     this.public = public || true;
     this.password = password || null;
     
-    this.chatHistory = [];
     this.game = null;
     this.gameStarted = false;
 }
@@ -36,10 +35,6 @@ Room.prototype.endGame = function() {
 
 Room.prototype.isPlaying = function() {
     return this.gameStarted;
-};
-
-Room.prototype.getChatHistory = function() {
-    return this.chatHistory;
 };
 
 Room.prototype.getGmID = function() {
