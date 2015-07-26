@@ -34,8 +34,12 @@ function afterReady() {
             $modal.data('bs.modal').options.keyboard = "true";
         }
     }).on('shown.bs.modal', function() {
+        var modalWidth = $(this).find('.modal-content').width();
+        var keyboardWidth = String(0.8 * modalWidth);
+
         // emoji keyboard
         $('#qns').emojiPicker({
+            width: keyboardWidth,
             iconBackgroundColor: "#fff"
         });
 
