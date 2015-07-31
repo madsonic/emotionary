@@ -153,6 +153,12 @@ socket.on('connect', function () {
         });
 
     });
+
+    // Reset the app the clean state
+    updateGmCtrl(); // Remove gm controls
+
+    clearScreen(); // Remove any chat history
+
 });
 
 socket.on('disconnect', function() {
