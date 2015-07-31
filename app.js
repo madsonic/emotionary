@@ -48,21 +48,26 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         console.log(socket.id + ' has left the game');
 
+        // Delete player
         if (__players.hasOwnProperty(socket.id)) {
-            var name = __players[socket.id].getName();
+            var player = __players[socket.id]
+            var name = player.getName();
             var i = nicknames.indexOf(name);
+            var rm = player.getRoom();
 
             // Delete from nicknames
             nicknames.splice(i, 1);
 
+            // Remove player from room guest list
+            __rooms[rm].evictOccupants(name);
+            closeEmptyRm(rm);
+
             // Delete from players
+            console.log('deleting player ' + socket.id);
             delete __players[socket.id];
-            console.log(__players);
-            console.log(nicknames);
 
             // Leave room - socket.io handles it
         }
-
     });
 
     ////////////////////
@@ -71,15 +76,18 @@ io.on('connection', function(socket) {
 
     // handle user registration
     socket.on('register', function(nickname) {
- 
+        console.log('register event');
         var player = new Player(nickname);
-        console.log(player);
+
         socket.join(__lobbyName, function() {
             console.log('join default lobby');
-            // player.setRoom(__lobbyName);
 
+            // set up player
             __players[socket.id] = player;
             nicknames.push(nickname);
+
+            // update room guest list
+            __rooms[__lobbyName].addOccupant(nickname);
             
             io.to(__lobbyName)
                   .emit('room-update', 
@@ -94,28 +102,28 @@ io.on('connection', function(socket) {
 
     // create new room for the user.
     socket.on('create-room', function(roomName) {
-
+        console.log('create-room event');
         var player = __players[socket.id];
         var oldRoom = player.getRoom();
-        var newRoom = new Room(roomName, socket.id, player.getName());
+        var newRoom = new Room(roomName, socket.id);
 
-        // remove room if last player in room
         socket.leave(oldRoom, function() {
             __rooms[oldRoom].evictOccupants(player.getName());
-
-            if (oldRoom !== __lobbyName && __rooms[oldRoom].isEmpty()) {
-                delete __rooms[oldRoom];
-            }
+            closeEmptyRm(oldRoom);
         });
         
         // Update player status.
         // Room creators are game master by default
         socket.join(roomName, function() {
+            // Update player status
             player.setRoom(roomName);
             player.setRole('gm');
 
-            // Update room list
+            // Update rooms list
             __rooms[roomName] = newRoom;
+
+            // Update room guest list
+            __rooms[roomName].addOccupant(player.getName());
 
             socket.emit('room-update', 
                         {
@@ -128,26 +136,25 @@ io.on('connection', function(socket) {
 
     // handle room joining
     socket.on('join-room', function(roomName) {
-
+        console.log('join-room event');
         var player = __players[socket.id];
         var oldRoom = player.getRoom();
         var newRoom = __rooms[roomName];
 
-        // remove room if last player in room
         socket.leave(oldRoom, function() {
             __rooms[oldRoom].evictOccupants(player.getName());
-
-            if (oldRoom !== __lobbyName && __rooms[oldRoom].isEmpty()) {
-                delete __rooms[oldRoom];
-            }
+            closeEmptyRm(oldRoom);
         });
         
         // Update player status
         socket.join(roomName, function() {
+            // Update player status
             player.setRoom(roomName);
             player.setRole('player');
-            __rooms[roomName].addOccupant(player.getName());
 
+            // Update room guest list
+            __rooms[roomName].addOccupant(player.getName());
+            
             io.to(roomName).emit('room-update', 
                       { 
                         id: socket.id,
@@ -156,7 +163,6 @@ io.on('connection', function(socket) {
                       });
             socket.emit('role-change', newRoom.getGmID());
         });
-
     });
 
     ////////////////////
@@ -230,7 +236,7 @@ io.on('connection', function(socket) {
                 var data = {
                     type: 'proper',
                     gm: rm.getGmID(),
-                    id: socket.id,
+                    winnderID: socket.id,
                     name: senderName,
                     msg: msg
                 };
@@ -297,6 +303,14 @@ io.on('connection', function(socket) {
 function endGame(roomName, data) {
     io.to(roomName).emit('end-game', data);
     __rooms[roomName].endGame();
+}
+
+// called when players leave room, namely disconnect and leave room
+// deletes non lobby room if it is empty 
+function closeEmptyRm(roomName) {
+    if (roomName !== __lobbyName && __rooms[roomName].isEmpty()) {
+        delete __rooms[roomName];
+    }
 }
 
 var port = process.env.PORT || 3000;

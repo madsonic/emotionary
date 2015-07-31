@@ -1,9 +1,7 @@
-function Room(name, gmID, gm, public, password) {
+function Room(name, gmID) {
     this.name = name;
     this.gmID = gmID || null;
-    this.people = [gm] || [];
-    this.public = public || true;
-    this.password = password || null;
+    this.people = [];
     
     this.game = null;
     this.gameStarted = false;
@@ -11,16 +9,6 @@ function Room(name, gmID, gm, public, password) {
 
 Room.prototype.getName = function() {
     return this.name;
-};
-
-Room.prototype.isOpen = function(pwd) {
-    if (this.gameStarted) {
-        return false;
-    } else if (this.public) {
-        return true;
-    } else { // private game requires password
-        return pwd === this.password;
-    }
 };
 
 Room.prototype.startGame = function(game) {
@@ -54,8 +42,8 @@ Room.prototype.evictOccupants = function(occupants) {
         this.people = [];
     } else {
         if (typeof occupants === 'string') {
-            var j = this.people.indexOf(occupants[i]);
-            this.people.splice(j, 1);            
+            var i = this.people.indexOf(occupants);
+            this.people.splice(i, 1);
         } else if (occupants.isArray()) {
             for (var i = 0; i < occupants.length; ++i) {
                 var j = this.people.indexOf(occupants[i]);

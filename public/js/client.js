@@ -239,7 +239,7 @@ socket.on('start-game', function(data) {
 
     // Announce start of game
     appendMsg(data.name + ' has started a new game', 'announcement');
-    appendMsg('Question: ' + data.qns + '?', 'announcement');
+    appendMsg('Question: ' + data.qns, 'announcement');
     appendMsg(data.cat);
 
 });
@@ -251,10 +251,13 @@ socket.on('end-game', function(data) {
         appendMsg(data.name + ' guessed the right answer!', 'announcement');
         appendMsg('The answer was: ' + data.msg, 'announcement');
 
-        if (data.id !== socket.id && data.gm !== socket.id) { 
-            // neither gm nor winner
+        // msg for non gm nor winner
+        if (data.winnderID !== socket.id && data.gm !== socket.id) { 
             appendMsg("Awwww..... Try harder next round"); 
         }
+
+        // change GM to be winner
+        // if (socket)
 
     } else if (data.type === 'improper') {
 
@@ -263,7 +266,7 @@ socket.on('end-game', function(data) {
         appendMsg(data.name + ' ended the game', 'announcement');
 
     }
-    updateGmCtrl(data.id, 'end');
+    updateGmCtrl(data.winnderID, 'end');
 });
 
 socket.on('wrong-ans', function() {
@@ -324,7 +327,7 @@ function appendMsg(msg, type) {
         if (type === undefined) {
             $('.message-history').append('<li>' + msg);
         } else {
-            $('.message-history').append('<li class='+ ' \" ' + type+ ' \"> ' + msg);
+            $('.message-history').append('<li class='+ ' \" ' + type + ' \"> ' + msg);
         }
     }
 }
