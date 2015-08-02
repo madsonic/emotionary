@@ -236,7 +236,7 @@ io.on('connection', function(socket) {
                 var data = {
                     type: 'proper',
                     gm: rm.getGmID(),
-                    winnderID: socket.id,
+                    winnerID: socket.id,
                     name: senderName,
                     msg: msg
                 };
@@ -246,8 +246,12 @@ io.on('connection', function(socket) {
 
                 console.log(__rooms[rmName]);
             } else {
-                // Do nothing 
                 console.log('Wrong. Try again');
+                var data = {
+                    id : socket.id,
+                    name: senderName,
+                    msg: msg
+                };
                 socket.broadcast.to(rmName).emit('message', data);
                 socket.emit('wrong-ans');
             }
@@ -290,7 +294,7 @@ io.on('connection', function(socket) {
         console.log('end game');
         var data = {
             type: 'improper',
-            id: socket.id,
+            gmID: socket.id,
             name: __players[socket.id].getName(),
         };
         var rmName = __players[socket.id].getRoom();

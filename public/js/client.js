@@ -258,21 +258,21 @@ socket.on('end-game', function(data) {
         appendMsg('The answer was: ' + data.msg, 'announcement');
 
         // msg for non gm nor winner
-        if (data.winnderID !== socket.id && data.gm !== socket.id) { 
+        if (data.winnerID !== socket.id && data.gm !== socket.id) { 
             appendMsg("Awwww..... Try harder next round"); 
         }
 
         // change GM to be winner
-        // if (socket)
+        updateGmCtrl(data.winnerID, 'end');
 
     } else if (data.type === 'improper') {
 
         // forced end
         $('.modal').modal('hide');
         appendMsg(data.name + ' ended the game', 'announcement');
+        updateGmCtrl(data.gmID, 'end');
 
     }
-    updateGmCtrl(data.winnderID, 'end');
 });
 
 socket.on('wrong-ans', function() {
@@ -319,14 +319,14 @@ function receiveMsg(data) {
         $('.message-history').append("<li>" + data.name + ": " + data.msg);
     } else {
         console.log('from yourself')
-        // $('.message-history').append("<li>you: " + data.msg);
+
         appendMsg('you: ' + data.msg);
     }
 }
 /*
     Appends msg to message history. Type will become class attribute
-    Types in use (if not specified, it will be a normal message)
-    announcement - centers text
+    Types in use (defaults to standard message):
+    announcement
  */
 function appendMsg(msg, type) {
     if (msg !== '' && msg !== undefined && msg !== null) {
@@ -353,6 +353,7 @@ function alertMsg(msg, context) {
     }
 }
 
+// nextState - start | end
 function updateGmCtrl(gmID, nextState) {
     var $sidebar = $('#sidebar-wrapper');
 
