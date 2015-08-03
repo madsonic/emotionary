@@ -241,7 +241,7 @@ socket.on('start-game', function(data) {
     $('.modal').modal('hide');
 
     // Add gm controls for gm browser
-    updateGmCtrl(data.gm, 'start');
+    updateGmCtrl(data.gmID, 'start');
 
     // Announce start of game
     appendMsg(data.name + ' has started a new game', 'announcement');
@@ -251,14 +251,16 @@ socket.on('start-game', function(data) {
 });
 
 socket.on('end-game', function(data) {
-    if (data.type === 'proper') {
+    console.log('end-game event');
+    console.log(data);
 
+    if (data.type === 'proper') {
         // ended game via guessing
         appendMsg(data.name + ' guessed the right answer!', 'announcement');
         appendMsg('The answer was: ' + data.msg, 'announcement');
 
         // msg for non gm nor winner
-        if (data.winnerID !== socket.id && data.gm !== socket.id) { 
+        if (data.winnerID !== socket.id && data.gmID !== socket.id) { 
             appendMsg("Awwww..... Try harder next round"); 
         }
 
@@ -266,12 +268,19 @@ socket.on('end-game', function(data) {
         updateGmCtrl(data.winnerID, 'end');
 
     } else if (data.type === 'improper') {
-
         // forced end
         $('.modal').modal('hide');
         appendMsg(data.name + ' ended the game', 'announcement');
         updateGmCtrl(data.gmID, 'end');
 
+    } else if (data.type === 'timeout') {
+        appendMsg('Time\'s up!', 'announcement');
+        appendMsg('The answer was: ' + data.ans, 'announcement');
+
+        // randomise next GM
+        // var i = Math.floor(Math.random() * date.people.length);
+        // var next
+        updateGmCtrl(data.gmID, 'end');
     }
 });
 
@@ -306,7 +315,6 @@ function makeGame(valArr) {
 }
 
 function endGame() {
-    console.log('end game');
     socket.emit('end-game');
 }
 

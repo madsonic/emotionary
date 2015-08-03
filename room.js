@@ -11,13 +11,15 @@ Room.prototype.getName = function() {
     return this.name;
 };
 
-Room.prototype.startGame = function(game) {
+Room.prototype.startGame = function(game, timerObj) {
     this.gameStarted = true;
     this.game = game;
+    this.game.timer(timerObj);
 };
 
 Room.prototype.endGame = function() {
     this.gameStarted = false;
+    this.game.endTimer();
     this.game = null;
 };
 
@@ -55,6 +57,6 @@ Room.prototype.evictOccupants = function(occupants) {
 
 Room.prototype.isEmpty = function() {
     return this.people.length === 0;
-}
+};
 
 var exports = module.exports = Room;

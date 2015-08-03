@@ -39,6 +39,10 @@ var nicknames = ['bot'];
 module.exports.players = __players;
 module.exports.rooms = __rooms;
 
+// Constants
+
+var ROUND_TIME = 2000; // in milliseconds - 1000 millisec = 1 sec 
+
 io.on('connection', function(socket) {
     console.log(socket.id + ' has connected');
 
@@ -231,7 +235,6 @@ io.on('connection', function(socket) {
             // message as ans
             if (rm.game.checkAns(msg)) {
                 // End game
-                // Add to player score
                 console.log('Correct!');
                 var data = {
                     type: 'proper',
@@ -240,11 +243,9 @@ io.on('connection', function(socket) {
                     name: senderName,
                     msg: msg
                 };
-                // io.to(rmName).emit('correct-ans', data);
-                // rm.endGame();
+
                 endGame(rmName, data);
 
-                console.log(__rooms[rmName]);
             } else {
                 console.log('Wrong. Try again');
                 var data = {
@@ -257,7 +258,6 @@ io.on('connection', function(socket) {
             }
         } else {
             // normal chat messages
-            console.log('chat messages');
             var data = {
                 id: socket.id,
                 name: senderName,
@@ -270,23 +270,38 @@ io.on('connection', function(socket) {
 
     // Handle game making
     socket.on('make-game', function(valArr) {
-        var player = __players[socket.id];
-        var rmName = player.getRoom();
+        console.log('make game event');
+        var gm = __players[socket.id];
+        var rmName = gm.getRoom();
         var game = new Game(valArr[0], valArr[1], valArr[2]);
         var data = {
-            gm: socket.id,
-            name: player.getName(),
+            gmID: socket.id,
+            name: gm.getName(),
             qns: game.qns,
             cat: game.category,
         };
+        var room = __rooms[rmName];
 
-        // End current game
-        __rooms[rmName].endGame();
-
-        // Update room game status
-        __rooms[rmName].startGame(game);
+        // End any ongoing game
+        endGame(rmName, data);
 
         io.to(rmName).emit('start-game', data);
+
+        // start timer when game starts
+        var timer = setTimeout(function() {
+            // time runs out before correct answer
+            var d = {
+                type: 'timeout',
+                gmID: data.gmID,
+                ans: game.ans,
+                people: room.getOccupants()
+            };
+            console.log('time\'s up');
+            endGame(rmName, d);
+        }, ROUND_TIME);
+
+        __rooms[rmName].startGame(game, timer);
+
     });
 
     // Handle end game
@@ -306,7 +321,11 @@ io.on('connection', function(socket) {
 
 function endGame(roomName, data) {
     io.to(roomName).emit('end-game', data);
-    __rooms[roomName].endGame();
+
+    var room = __rooms[roomName];
+    if (room.isPlaying()) {
+        room.endGame();
+    }
 }
 
 // called when players leave room, namely disconnect and leave room
