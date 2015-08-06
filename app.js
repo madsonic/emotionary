@@ -41,7 +41,7 @@ module.exports.rooms = __rooms;
 
 // Constants
 
-var ROUND_TIME = 2000; // in milliseconds - 1000 millisec = 1 sec 
+var ROUND_TIME = 60000; // in milliseconds - 1000 millisec = 1 sec 
 
 io.on('connection', function(socket) {
     console.log(socket.id + ' has connected');
