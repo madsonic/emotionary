@@ -18,7 +18,7 @@ README
 # Project Title: ~~Quiz Bomb~~Emotionary
 
 ### <a name="overview"></a>Overview [↑](#top)
-A web based quiz game. Play timed quiz with your friends or the world! Each round a player sets a question and other players try to guess it.~~
+~~A web based quiz game. Play timed quiz with your friends or the world! Each round a player sets a question and other players try to guess it.~~
 A cross between Pictionary and Emojis. Use Emojis instead drawings and let your friends guess what it is suppose to be!
 
 Game layout is responsive and is playable on both mobile devices and desktop.
@@ -68,22 +68,22 @@ Apollo 11
 For the final sprint the game has changed slightly but all previously implemented features still works. Only what is
 allowed to set as questions have changed. Question can only be filled up with the emoji keyboard
 
-7. [x]social sharing
+7. [x] social sharing
     * As a player, I want to share with others the game I am playing (Added OG data and a Facebook share button)
-8. [x]uniform emoji
+8. [x] uniform emoji
     * As a player, I want to see uniform emoji choices to be independent of platform (mobile/desktop).
 9. <span class="change">~~score leaderboard~~ insufficient time</span>
     * As a player I want to see how well I (and other players) have performed
 10. <span class="change">~~questions bank~~ insufficient time</span>
     * As a game master, I want to sample questions when I run out of questions to set 
-11. <span class="change">[x]Room features</span>
+11. <span class="change">[x] Room features</span>
     * As a game master, I want to stop the current game in case I set the questions wrongly
     * As players/gamemaster, I do not want new players to join the room when there is an ongoing game.
-13. <span class="change">[x]Destroys empty room automatically
+13. <span class="change">[x] Destroys empty room automatically
     * (This is more for backend). This ensures there are no rubbish rooms to pollute rooms namespace
 14. <span class="change">[x] UX improvement</span>
 	* As a player, there should be some feedback when I change room (room name animates)
-15. <span class="change">[x]Disconnection</span>
+15. <span class="change">[x] Disconnection</span>
     * As a player, when I lose connection to the game, I want to be aware. (Player has to re-register on connection)
 
 -------------------
