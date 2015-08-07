@@ -323,7 +323,7 @@ function endGame(roomName, data) {
     io.to(roomName).emit('end-game', data);
 
     var room = __rooms[roomName];
-    if (room.isPlaying()) {
+    if (room !== undefined && room.isPlaying()) {
         room.endGame();
     }
 }

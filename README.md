@@ -2,8 +2,8 @@
 
 README
 ====================== 
-*(updated section for Evaluation ~~1~~2)*<br>
-<span class="change">*All highlighted text shows changed content. Alternatively tags 'milestone1' and 'milestone2' on Github to compare changes</span>
+*(updated section for Evaluation ~~2~~ 3)*<br>
+<span class="change">*All highlighted text shows changed content. Alternatively view tags 'milestone2' and 'milestone3' on Github to compare changes</span>
 
 ### <a name="top"></a><span class>Content page</span>
 1. [Overview](#overview)
@@ -18,14 +18,15 @@ README
 # Project Title: ~~Quiz Bomb~~Emotionary
 
 ### <a name="overview"></a>Overview [↑](#top)
-~~A web based quiz game. Play timed quiz with your friends or the world! Each round a player sets a question and other players try to guess it.~~
+A web based quiz game. Play timed quiz with your friends or the world! Each round a player sets a question and other players try to guess it.~~
 A cross between Pictionary and Emojis. Use Emojis instead drawings and let your friends guess what it is suppose to be!
 
-Game is playable on both mobile devices and desktop.
+Game layout is responsive and is playable on both mobile devices and desktop.
 
 <!-- More description of game. add in visuals -->
 ### <a name="demo"></a><span class="change">Demo</span> [↑](#top)
-[Game Demo][]<br>
+[Game Demo (milestone 2)][]<br>
+[Game Demo (milestone 3)][]<br>
 [Game Link][]
 
 -------------------
@@ -48,63 +49,52 @@ Apollo 11
     * As a player I want to able to create room so that I can play in a private environment
 2. [x]Set nickname
     * As a player I want to be able to set a unique name to be identifiable
-3. [x]<span class="change">Room status messages</span>
+3. [x]Room status messages
 	 * As a player I want to be informed of the changes to the room I'm in
 
 ####Second Sprint
 
-4.  <span class="change">[x]Message sending</span>
+4.  [x]Message sending
     * As a player I want to send my answer to the 'game master' for verification
     * As a active/non-active player, everyone should be able to see my answer so that we share funny answers
-5. <span class="change">Game logic</span>
-    * [x]As the game master, I want answers to be accepted immediately when it matches my answer perfectly
-    * [x]As the game master, I want to set the question, answer and question category
+5. [x]Game logic
+    * As the game master, I want answers to be accepted immediately when it matches my answer perfectly
+    * As the game master, I want to set the question, answer and question category
     * As players, I want the game master to be rotated each round so that I get to set the question
 6.  [x]Form validation
 	 * (This is more for backend) This ensures there are no duplicates of any names as well as for security reasons
 
 ####Final Sprint
+For the final sprint the game has changed slightly but all previously implemented features still works. Only what is
+allowed to set as questions have changed. Question can only be filled up with the emoji keyboard
 
-7. social sharing
-    * [x]As a player, I want to share with others the game I am playing
-8. uniform emoji
-    * [x]As a player, I want to see uniform emoji choices no matter which platform I am on.
-9. score leaderboard
+7. [x]social sharing
+    * As a player, I want to share with others the game I am playing (Added OG data and a Facebook share button)
+8. [x]uniform emoji
+    * As a player, I want to see uniform emoji choices to be independent of platform (mobile/desktop).
+9. <span class="change">~~score leaderboard~~ insufficient time</span>
     * As a player I want to see how well I (and other players) have performed
-10. questions bank
+10. <span class="change">~~questions bank~~ insufficient time</span>
     * As a game master, I want to sample questions when I run out of questions to set 
+11. <span class="change">[x]Room features</span>
+    * As a game master, I want to stop the current game in case I set the questions wrongly
+    * As players/gamemaster, I do not want new players to join the room when there is an ongoing game.
+13. <span class="change">[x]Destroys empty room automatically
+    * (This is more for backend). This ensures there are no rubbish rooms to pollute rooms namespace
+14. <span class="change">[x] UX improvement</span>
+	* As a player, there should be some feedback when I change room (room name animates)
+15. <span class="change">[x]Disconnection</span>
+    * As a player, when I lose connection to the game, I want to be aware. (Player has to re-register on connection)
 
 -------------------
 ### <a name="utility"></a><span class="change">System Utility</span> [↑](#top)
 Methods used for utility testing
 
 * [Prototype][]
-* Real User tests and feedbacks
+* [Real User tests and feedbacks][]
 * Cognitive Walkthrough / Heuristic Evaluation / User stories
 
 -------------------
-<!-- for later milestone
-### Justifications for Apollo 11
- 
-This section added for teams to use as a template for Evaluation 3.  You should state the level that you wish to get, as well as a justification that consists of what you did to satisfy the minimum requirements for that achievement, against the details in Post @159).
-
-Our team proposes that we should be granted Project Gemini (Intermediate) level of achievement.
-As you can see from our log we have been active over all three months of the project and have a record of sustained contribution to our Orbital project.  We have completed Liftoff, and met each other on and off through the months to develop our web application using the recommended Google App Engine using Python.
- 
-With respect to Mission Control topics, Min attended one session physically, while Wee Sun watched two sessions.  We have used some of the technologies (Bootstrap, Maps API) in our project, but have also watched the Unit Testing sesion although that hasn't made it into our project.
- 
-With respect to Peer evaluation, we have tried our best to give constructive feedback in the free-text fields, going beyond the minimum requirement for offering feedback to you, our peers. Hopefully you will agree and grant us a minimum of 2.5 / 4 stars for feedback from you. We're hoping for your 3 or 4 ratings for the peer feedback evaluation.
-For the four additional features on top of the basic project we would like our peers and the instruction staff to consider the following for the criteria for Project Gemini (culled from Post @159). Hopefully this grants us the 2.5/4 minimum from all of you (please?):
-·       Added Facebook system for sending thank yous (as like button by the receiving party): counts again Social integration (see e.g. https://developers.facebook.com/docs/plugins/).
- 
-·       Google Login: counts against Facebook or OpenID login (other than that provided automatically by Google App Engine), see e.g. https://developers.facebook.com/docs/facebook-login,https://developers.google.com/appengine/articles/openid.
- 
-·       Added pins and local maps for events: counts against Google Maps API https://developers.google.com/maps/, or OneMap API http://www.onemap.sg/api/help/.
- 
-·       Adding in auto-suggested pictures for gifts via querying Google Image against the user's description of the gift: counts against Other features.
- 
-We wished to have been able to complete some form of user testing but we ran out of time. We hope to poll more friends as they return to school at Week 0 and 1 for this, but we understand that this cannot be counted as the project is officially over with Evaluation 3 :-( Oh well.
--->
 
 ### <a name="references"></a>References [↑](#top)
 
@@ -126,9 +116,11 @@ Technology:
 [Log][]
 
 <!-- links -->
-[game demo]: http://youtu.be/l-rWHvoIWG4
-[prototype]: http://emotionary.heroku.com
-[game link]: http://emotionary.heroku.com
+[Game Demo (milestone 2)]: http://youtu.be/l-rWHvoIWG4
+[Game Demo (milestone 3)]: http://youtu.be/l-rWHvoIWG4
+[Real User tests and feedbacks]: https://docs.google.com/spreadsheets/d/1GQi1M8QyhQVgS020U0mcLAAQEl97xcG4CAncg9z1FhU/edit?usp=sharing
+[prototype]: http://emotionary.herokuapp.com
+[game link]: http://emotionary.herokuapp.com
 [video]: http://youtu.be/HEGBts_DTzo
 [slides]: https://docs.google.com/presentation/d/1aR7e_4yMLNAcQ9QlRmh7JdMM8Tlh1obsozhcB6fMlt8/edit?usp=sharing 
 [Socket.io]: http://socket.io/
